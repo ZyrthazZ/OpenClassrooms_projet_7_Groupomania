@@ -1,0 +1,2 @@
+ajouter le userid directement dans la requête, en restant dans le backend => seul le auth
+sait ce qu'on lui transfère comme données exactes => VOIR AVEC JASON 
