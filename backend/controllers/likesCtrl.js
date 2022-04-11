@@ -2,7 +2,7 @@
 
 var models = require('../models');
 var asyncLib = require('async');
-var jwtUtils = require('../utils/jwt.utils');
+
 const {
     post
 } = require('../app');
@@ -81,7 +81,7 @@ module.exports = {
                                 });
                             //The post is already liked by the user
                         } else {
-                            console.log("ça a merdé")
+                            console.log("ErRoR")
                         }
                     })
             });

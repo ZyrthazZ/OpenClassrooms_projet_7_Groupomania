@@ -1,2 +1,30 @@
-ajouter le userid directement dans la requête, en restant dans le backend => seul le auth
-sait ce qu'on lui transfère comme données exactes => VOIR AVEC JASON 
+finir la route likeOrDislike
+faire les vérifs email / password avec des middleware
+ajouter des routes pour les posts et le user (modify, delete etc)
+modifier les models pour ajouter les commentaires
+ajouter des routes pour les commentaires
+
+
+
+if(admin) {
+            next();
+        } else {
+            
+        }
+
+//req.path == '/api/user'
+        if(req.method == 'put' || req.method == 'delete') {
+            var checkUserId = await models.Post.findOne({
+                userId: req.userId
+            });
+            if(!checkUserId) {
+                //unahtorized
+            }
+            //authorization
+        } else {
+            
+        }
+        
+        => ESSAI POUR LES ROUTES ADMINS PLUS TARD
+        
+//

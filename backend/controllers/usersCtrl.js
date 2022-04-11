@@ -1,6 +1,5 @@
 //Imports
 
-const jwtUtils = require("../utils/jwt.utils");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const models = require("../models");
@@ -17,29 +16,25 @@ const PASSWORD_REGEX = /^([a-zA-Z0-9@*#]{8,15})$/
 
 module.exports = {
     register: function (req, res) {
-        const email = req.body.email;
-        const username = req.body.username;
-        const password = req.body.password;
-        const bio = req.body.bio;
 
-        if (email == null || username == null || password == null) {
+        if (req.body.email == null || req.body.username == null || req.body.password == null) {
             return res.status(400).json({
                 error: "missing parameters"
             });
         }
-        if (username.length >= 13 || username.length <= 4) {
+        if (req.body.username.length >= 13 || req.body.username.length <= 4) {
             return res.status(400).json({
                 error: "username must be from 5 to 13 length"
             });
         }
 
-        if (!EMAIL_REGEX.test(email)) {
+        if (!EMAIL_REGEX.test(req.body.email)) {
             return res.status(400).json({
                 error: "use a correct email format"
             });
         }
 
-        if (!PASSWORD_REGEX.test(password)) {
+        if (!PASSWORD_REGEX.test(req.body.password)) {
             return res.status(400).json({
                 error: "password must be at least 8 characters long and max 15 characters long"
             });
@@ -50,7 +45,7 @@ module.exports = {
                     models.User.findOne({
                             attributes: ['email'],
                             where: {
-                                email: email
+                                email: req.body.email
                             }
                         })
                         .then(function (userFound) {
@@ -64,7 +59,7 @@ module.exports = {
                 }, //End of function(done)
                 function (userFound, callback) {
                     if (!userFound) {
-                        bcrypt.hash(password, 5, function (err, encryptedPassword) {
+                        bcrypt.hash(req.body.password, 5, function (err, encryptedPassword) {
                             callback(null, userFound, encryptedPassword)
                         })
                     } else {
@@ -76,10 +71,10 @@ module.exports = {
 
                 function (userFound, encryptedPassword, callback) {
                     var newUser = models.User.create({
-                            email: email,
-                            username: username,
+                            email: req.body.email,
+                            username: req.body.username,
                             password: encryptedPassword,
-                            bio: bio,
+                            bio: req.body.bio,
                             isAdmin: 0
                         })
                         .then(function (newUser) {
@@ -109,10 +104,7 @@ module.exports = {
 
     login: function (req, res) {
 
-        var email = req.body.email;
-        var password = req.body.password;
-
-        if (email == null || password == null) {
+        if (req.body.email == null || req.body.password == null) {
             return res.status(400).json({
                 error: "missing parameters"
             });
@@ -122,7 +114,7 @@ module.exports = {
                 function (callback) {
                     models.User.findOne({
                             where: {
-                                email: email
+                                email: req.body.email
                             }
                         })
                         .then(function (userFound) {
@@ -137,7 +129,7 @@ module.exports = {
 
                 function (userFound, callback) {
                     if (userFound) {
-                        bcrypt.compare(password, userFound.password, function (errBcrypt, resBcrypt) {
+                        bcrypt.compare(req.body.password, userFound.password, function (errBcrypt, resBcrypt) {
                             callback(null, userFound, resBcrypt);
                         });
                     } else {
@@ -163,7 +155,8 @@ module.exports = {
                     return res.status(201).json({
                         userId: userFound.id,
                         token: jwt.sign({
-                            userId: userFound.id
+                            userId: userFound.id,
+                            isAdmin: userFound.isAdmin
                         }, process.env.JWT_SIGN_SECRET, {
                             expiresIn: '1h'
                         })
@@ -178,20 +171,11 @@ module.exports = {
     }, //End of function login
 
     getUserProfile: function (req, res) {
-        //Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
-
-        if (userId < 0) {
-            return res.status(400).json({
-                error: 'wrong token'
-            });
-        }
 
         models.User.findOne({
                 attributes: ['id', 'email', 'username', 'bio'],
                 where: {
-                    id: userId
+                    id: req.userId
                 }
             })
             .then(function (user) {
@@ -211,19 +195,12 @@ module.exports = {
     }, //End of function getUserProfile
 
     updateUserProfile: function (req, res) {
-        //Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
-
-        //Params 
-        var bio = req.body.bio;
-
         asyncLib.waterfall([
                 function (callback) {
                     models.User.findOne({
                             attributes: ['id', 'bio'],
                             where: {
-                                id: userId
+                                id: req.userId
                             }
                         })
                         .then(function (userFound) {
@@ -239,7 +216,7 @@ module.exports = {
                 function (userFound, callback) {
                     if (userFound) {
                         userFound.update({
-                                bio: (bio ? bio : userFound.bio)
+                                bio: (req.body.bio ? req.body.bio : userFound.bio)
                             })
                             .then(function (userFound) {
                                 callback(userFound);
