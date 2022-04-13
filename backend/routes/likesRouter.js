@@ -3,11 +3,14 @@
 var express = require("express");
 var router = express.Router();
 var likesCtrl = require("../controllers/likesCtrl");
-//TODO : implemant auth middleware here 
+var auth_post = require("../middleware/auth_post");
+var auth_user = require('../middleware/auth_user');
 
 //Routes 
 
-router.post('/posts/:postId/vote', likesCtrl.likeOrDislikePost);
+router.post('/posts/:postId/vote/like', auth_user, likesCtrl.likePost);
+router.post('/posts/:postId/vote/dislike', auth_user, likesCtrl.dislikePost);
+
 
 
 //Exports
