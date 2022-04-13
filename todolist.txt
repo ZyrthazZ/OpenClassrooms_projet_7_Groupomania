@@ -3,7 +3,10 @@ faire les vérifs email / password avec des middleware
 ajouter des routes pour les posts et le user (modify, delete etc)
 modifier les models pour ajouter les commentaires
 ajouter des routes pour les commentaires
+ajouter / modifier les routes pour l'admin
 
+FIX : régler le problème avec le middleware auth_post : si il n'y a 
+aucun objet dans la BDD ça bug
 
 
 if(admin) {

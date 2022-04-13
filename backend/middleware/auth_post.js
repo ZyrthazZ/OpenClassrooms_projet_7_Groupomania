@@ -19,9 +19,11 @@ module.exports = async (req, res, next) => {
 
         //Let's check if the post contains a userId equal to the extracted userId
         var checkUserId = await models.Post.findOne({
-            userId: req.userId
+            where: {
+                userId: req.userId
+            }
         });
-        
+
         console.log("checkUserId", checkUserId);
         //Let's check if there is userId in the checkUserId object and if he is different 
         //from the token extracted userId
