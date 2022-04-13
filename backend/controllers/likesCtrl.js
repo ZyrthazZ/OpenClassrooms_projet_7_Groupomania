@@ -2,10 +2,6 @@
 
 var models = require('../models');
 var asyncLib = require('async');
-const {
-    post
-} = require('../routes/postsRouter');
-
 
 //Routes
 

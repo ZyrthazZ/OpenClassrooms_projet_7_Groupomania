@@ -5,40 +5,12 @@ const bcrypt = require("bcrypt");
 const models = require("../models");
 const asyncLib = require("async");
 
-//Constants
-
-const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-const PASSWORD_REGEX = /^([a-zA-Z0-9@*#]{8,15})$/
-
 
 
 //Routes
 
 module.exports = {
     register: function (req, res) {
-
-        if (req.body.email == null || req.body.username == null || req.body.password == null) {
-            return res.status(400).json({
-                error: "missing parameters"
-            });
-        }
-        if (req.body.username.length >= 13 || req.body.username.length <= 4) {
-            return res.status(400).json({
-                error: "username must be from 5 to 13 length"
-            });
-        }
-
-        if (!EMAIL_REGEX.test(req.body.email)) {
-            return res.status(400).json({
-                error: "use a correct email format"
-            });
-        }
-
-        if (!PASSWORD_REGEX.test(req.body.password)) {
-            return res.status(400).json({
-                error: "password must be at least 8 characters long and max 15 characters long"
-            });
-        }
         //Méthode waterfall pour plus de lisibilité
         asyncLib.waterfall([
                 function (callback) {
@@ -103,13 +75,6 @@ module.exports = {
     }, //End of register function
 
     login: function (req, res) {
-
-        if (req.body.email == null || req.body.password == null) {
-            return res.status(400).json({
-                error: "missing parameters"
-            });
-        }
-
         asyncLib.waterfall([
                 function (callback) {
                     models.User.findOne({
@@ -171,7 +136,6 @@ module.exports = {
     }, //End of function login
 
     getUserProfile: function (req, res) {
-
         models.User.findOne({
                 attributes: ['id', 'email', 'username', 'bio'],
                 where: {
