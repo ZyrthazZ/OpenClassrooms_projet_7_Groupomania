@@ -1,12 +1,10 @@
 
 créer une route deleteUserProfile
+créer des middlewares Validators pour les routes posts
 ajouter des routes pour les posts et le user (modify, delete etc)
 modifier les models pour ajouter les commentaires
 ajouter des routes pour les commentaires
 ajouter / modifier les routes pour l'admin
-
-FIX : régler le problème avec le middleware auth_post : si il n'y a 
-aucun objet dans la BDD ça bug
 
 //Remettre la BDD à zéro : 
 => sequelize db:drop

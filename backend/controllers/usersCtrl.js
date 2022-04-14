@@ -298,7 +298,7 @@ module.exports = {
             function (userFound) {
                 if (userFound) {
                     res.status(201).json({
-                        userFound
+                        message: "user password has been updated"
                     });
                 } else {
                     res.status(500).json({
@@ -309,4 +309,114 @@ module.exports = {
 
         ) //End of waterfall method
     }, //End of function updateUserPassword
+
+    deleteUserProfile: function (req, res) {
+        asyncLib.waterfall([
+                function (callback) {
+                    models.User.findOne({
+                            where: {
+                                id: req.userId
+                            }
+                        })
+                        .then(function (userFound) {
+                            console.log("userFound", userFound)
+                            callback(null, userFound);
+                        })
+                        .catch(function (err) {
+                            res.status(500).json({
+                                error: 'unable to verify user'
+                            });
+                        });
+                }, //End of function(callback)
+
+                function (userFound, callback) {
+                    if (userFound) {
+                        // Check the user password before deleting the profile
+                        bcrypt.compare(req.body.password, userFound.password, function (errBcrypt, resBcrypt) {
+                            callback(null, userFound, resBcrypt);
+                        });
+                    } else {
+                        res.status(404).json({
+                            error: "user not found"
+                        });
+                    }
+                }, //End of function(userFound, callback)
+
+                function (userFound, resBcrypt, callback) {
+                    if (resBcrypt) {
+                        callback(null, userFound);
+                    } else {
+                        return res.status(403).json({
+                            error: 'Invalid password'
+                        });
+                    }
+                }, //End of function (userFound, resBcrypt, callback)
+
+                function (userFound, callback) {
+                    if (userFound) {
+                        // Delete user from the Like table
+                        models.Like.destroy({
+                                where: {
+                                    userId: req.userId
+                                }
+                            })
+                            .then(function (userFound) {
+                                console.log("User deleted from the Like table")
+                            })
+                            .catch(function (err) {
+                                res.status(500).json({
+                                    error: 'cannot delete Like'
+                                });
+                            });
+                        // Delete user from the Post table
+                        models.Post.destroy({
+                                where: {
+                                    userId: req.userId
+                                }
+                            })
+                            .then(function (userFound) {
+                                console.log("User deleted from the Post table")
+                            })
+                            .catch(function (err) {
+                                res.status(500).json({
+                                    error: 'cannot delete Like'
+                                });
+                            });
+                        // Delete user from the User table
+                        models.User.destroy({
+                                where: {
+                                    id: req.userId
+                                }
+                            })
+                            .then(function (userFound) {
+                                console.log("User deleted from the User table")
+                                callback(userFound);
+                            })
+                            .catch(function (err) {
+                                res.status(502).json({
+                                    error: 'cannot delete Like'
+                                });
+                            });
+                    } else {
+                        res.status(400).json({
+                            error: 'unable to delete user'
+                        });
+                    };
+                }
+            ], //Exit of waterfall method (NOT THE END)
+
+            function (userFound) {
+                if (userFound) {
+                    res.status(201).json({
+                        message: 'user deleted'
+                    })
+                } else {
+                    res.status(404).json({
+                        error: 'unable to delete user'
+                    })
+                }
+            }, //End of function (userFound)
+
+        ); //End of waterfall method
+    }, //End of deleteUserProfile
 }; //End of modules.exports

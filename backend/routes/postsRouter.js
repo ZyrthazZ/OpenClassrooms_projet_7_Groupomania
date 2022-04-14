@@ -5,8 +5,6 @@ var postsCtrl = require("../controllers/postsCtrl");
 var auth_posts = require('../middleware/auth_post');
 var auth_user = require('../middleware/auth_user');
 
-//FIX THIS : how can the auth_posts work with 
-//an empty db ? 
 
 
 //Routes 
