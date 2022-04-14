@@ -33,11 +33,20 @@ module.exports = (req, res, next) => {
             message: "Please fill the password field"
         })
     }
+
     if (!passwordSchema.validate(req.body.password)) {
         res.status(400).json({
             message: "Error ! Your password doesn't match the right format. He must be between 8 and 25 characters long, contains uppercase, lowercase, at least 2 digits and special character !"
         })
     } else {
+        if (req.body.newPassword) {
+            console.log("req.body.newPassword", req.body.newPassword);
+            if (!passwordSchema.validate(req.body.newPassword)) {
+                res.status(400).json({
+                    message: "Error ! Your new password doesn't match the right format. He must be between 8 and 25 characters long, contains uppercase, lowercase, at least 2 digits and special character !"
+                })
+            }
+        }
         console.log("Password fits the right format")
         next();
     }

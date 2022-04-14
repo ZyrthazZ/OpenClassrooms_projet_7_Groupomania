@@ -143,6 +143,7 @@ module.exports = {
                 }
             })
             .then(function (user) {
+                console.log("username", user.username)
                 if (user) {
                     res.status(201).json(user);
                 } else {
@@ -162,7 +163,7 @@ module.exports = {
         asyncLib.waterfall([
                 function (callback) {
                     models.User.findOne({
-                            attributes: ['id', 'bio'],
+                            attributes: ['id', 'username', 'bio'],
                             where: {
                                 id: req.userId
                             }
@@ -180,6 +181,9 @@ module.exports = {
                 function (userFound, callback) {
                     if (userFound) {
                         userFound.update({
+                                //If req.body.username if filled, replace the username in the userfound object
+                                username: (req.body.username ? req.body.username : userFound.username),
+                                //If req.body.bio if filled, replace the bio in the userfound object
                                 bio: (req.body.bio ? req.body.bio : userFound.bio)
                             })
                             .then(function (userFound) {
@@ -210,4 +214,99 @@ module.exports = {
             }, //End of function(userFound)
         ); //End of waterfall method
     }, //End of function updateUserProfile
+
+    updateUserPassword: function (req, res) {
+        asyncLib.waterfall([
+                function (callback) {
+                    console.log("HELLO", req.userId)
+                    models.User.findOne({
+                            attributes: ['id', 'password'],
+                            where: {
+                                id: req.userId
+                            }
+                        })
+                        .then(function (userFound) {
+                            callback(null, userFound);
+                        })
+                        .catch(function (err) {
+                            res.status(500).json({
+                                error: 'unable to verify user'
+                            });
+                        });
+                }, //End of function(callback)
+
+                function (userFound, callback) {
+                    if (userFound) {
+                        // Ask the user to fill his ancient password for security before changing it
+                        bcrypt.compare(req.body.password, userFound.password, function (errBcrypt, resBcrypt) {
+                            callback(null, userFound, resBcrypt);
+                        });
+                    } else {
+                        res.status(404).json({
+                            error: "user not found"
+                        });
+                    }
+                }, //End of function(userFound, callback)
+
+                function (userFound, resBcrypt, callback) {
+                    if (resBcrypt) {
+                        callback(null, userFound);
+                    } else {
+                        return res.status(403).json({
+                            error: 'Invalid password'
+                        });
+                    }
+                }, //End of function (userFound, resBcrypt, callback)
+
+                function (userFound, callback) {
+                    console.log("Coucou")
+
+                    if (req.body.newPassword === req.body.confirmNewPassword) {
+                        bcrypt.hash(req.body.newPassword, 5, function (err, encryptedPassword) {
+                            console.log("encryptedPassword", encryptedPassword);
+                            callback(null, userFound, encryptedPassword)
+                        })
+                    } else {
+                        return res.status(400).json({
+                            error: "Passwords don't match !"
+                        })
+                    }
+                }, //End of function (userFound, callback)
+
+                function (userFound, encryptedPassword, callback) {
+                    if (userFound) {
+                        userFound.update({
+                                password: encryptedPassword
+                            })
+                            .then(function (userFound) {
+                                callback(userFound);
+                            })
+                            .catch(function (err) {
+                                res.status(500).json({
+                                    error: 'cannot update user'
+                                });
+                            });
+                    } else {
+                        res.status(404).json({
+                            error: 'user not found'
+                        });
+                    }
+                }, //End of function (userFound)
+
+            ], //Exit of waterfall method (NOT THE END)
+
+            function (userFound) {
+                if (userFound) {
+                    res.status(201).json({
+                        userFound
+                    });
+                } else {
+                    res.status(500).json({
+                        error: 'cannot update user profile'
+                    });
+                }
+            }, //End of function(userFound)
+
+        ) //End of waterfall method
+    }, //End of function updateUserPassword
 }; //End of modules.exports

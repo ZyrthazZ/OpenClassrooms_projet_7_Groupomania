@@ -1,3 +1,5 @@
+
+créer une route deleteUserProfile
 ajouter des routes pour les posts et le user (modify, delete etc)
 modifier les models pour ajouter les commentaires
 ajouter des routes pour les commentaires
