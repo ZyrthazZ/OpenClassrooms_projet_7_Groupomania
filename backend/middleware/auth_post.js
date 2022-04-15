@@ -16,24 +16,29 @@ module.exports = async (req, res, next) => {
         req.idAdmin = decodedToken.isAdmin;
         console.log("req.userId FROM AUTH", req.userId);
         console.log("req.isAdmin FROM AUTH", req.isAdmin);
-
+        console.log("req.params.postId", req.params.postId)
         //Let's check if the post contains a userId equal to the extracted userId
-        var checkUserId = await models.Post.findOne({
+        const checkUserId = await models.Post.findOne({
             where: {
+                id: req.params.postId,
                 userId: req.userId
             }
         });
 
-        console.log("checkUserId", checkUserId);
+        console.log("checkUserId.id", checkUserId.id);
         //Let's check if there is userId in the checkUserId object and if he is different 
         //from the token extracted userId
         if (checkUserId.userId && checkUserId.userId !== req.userId) { // User login is not user that owns post
             throw "Invalid user ID";
-        } else { // User login is user that owns post
-            console.log("Authentified request !")
-            next();
         }
-    } catch {
+        if (checkUserId.id && checkUserId.id != req.params.postId) {
+            throw "Invalid id";
+        }
+        console.log("Authentified request !")
+        next();
+
+    } catch (e) {
+        console.log(e)
         res.status(401).json({
             error: "Invalid request !"
         });
