@@ -147,8 +147,71 @@ module.exports = {
                         error: 'unable to get the postFound'
                     })
                 }
-            } //End of function(postFound)
+            }, //End of function(postFound)
         ) //End of waterfall method
-
     }, //End of function updatePost
+
+    deletePost: (req, res) => {
+        //Params
+        const postId = req.params.postId
+        asyncLib.waterfall([
+                function (callback) {
+                    models.Post.findByPk(postId)
+                        .then((postFound) => {
+                            console.log("postFound", postFound)
+                            callback(null, postFound)
+                        })
+                        .catch((err) => {
+                            res.status(401).json({
+                                error: 'post not found'
+                            });
+                        })
+                }, //End of function (callback)
+
+                function (postFound, callback) {
+                    if (postFound) {
+                        //Delete the likes related to the post
+                        models.Like.destroy({
+                                where: {
+                                    postId: postId
+                                }
+                            })
+                            .then(() => {
+                                console.log("likes related to post deleted from the Like table !")
+                            })
+                            .catch((err) => {
+                                res.status(500).json({
+                                    error: 'cannot delete Like'
+                                });
+                            })
+                        //Delete the post
+                        models.Post.destroy({
+                                where: {
+                                    userId: req.userId,
+                                    id: postId
+                                }
+                            })
+                            .then((postFound) => {
+                                console.log("post deleted from the Post table ! ")
+                                callback(postFound)
+                            })
+                            .catch((err) => {
+                                res.status(500).json({
+                                    error: 'cannot delete post'
+                                });
+                            })
+                    }
+                }, //End of function (postFound, callback)
+
+            ], //Exit of waterfall method (NOT THE END)
+            function (postFound) {
+                if (postFound) {
+                    res.status(205).json({
+                        message: 'post deleted'
+                    })
+                }
+            }, //End of function (postFound)
+
+        ) //End of waterfall method
+    } //End of function (deletePost)
 }
