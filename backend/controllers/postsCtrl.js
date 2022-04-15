@@ -44,7 +44,6 @@ module.exports = {
                     models.Post.create({
                             title: req.body.title,
                             content: req.body.content,
-                            likes: 0,
                             UserId: userFound.id
                         })
                         .then(function (newPost) {
