@@ -3,26 +3,11 @@ var models = require('../models');
 var asyncLib = require('async');
 
 // Constants
-const TITLE_LIMIT = 2;
-const CONTENT_LIMIT = 4;
 const ITEMS_LIMIT = 50;
 
 // Routes
 module.exports = {
     createPost: function (req, res) {
-
-        if (req.body.title == null || req.body.content == null) {
-            return res.status(400).json({
-                'error': 'missing parameters'
-            });
-        }
-
-        if (req.body.title.length <= TITLE_LIMIT || req.body.content.length <= CONTENT_LIMIT) {
-            return res.status(400).json({
-                'error': 'invalid parameters'
-            });
-        }
-
         asyncLib.waterfall([
             function (done) {
                 models.User.findOne({

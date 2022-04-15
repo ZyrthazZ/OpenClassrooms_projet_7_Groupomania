@@ -1,7 +1,5 @@
 
-créer une route deleteUserProfile
-créer des middlewares Validators pour les routes posts
-ajouter des routes pour les posts et le user (modify, delete etc)
+ajouter des routes pour les posts et le user (delete etc)
 modifier les models pour ajouter les commentaires
 ajouter des routes pour les commentaires
 ajouter / modifier les routes pour l'admin

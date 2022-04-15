@@ -2,14 +2,14 @@
 var express = require("express");
 var router = express.Router();
 var postsCtrl = require("../controllers/postsCtrl");
-var auth_posts = require('../middleware/auth_post');
+var postValidator = require("../middleware/postValidator");
 var auth_user = require('../middleware/auth_user');
 
 
 
 //Routes 
 
-router.post('/posts/new/', auth_user, postsCtrl.createPost);
+router.post('/posts/new/', postValidator, auth_user, postsCtrl.createPost);
 router.get('/posts/', auth_user, postsCtrl.listPosts);
 
 //Exports

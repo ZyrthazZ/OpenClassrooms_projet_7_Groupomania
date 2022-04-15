@@ -368,6 +368,9 @@ module.exports = {
                                     error: 'cannot delete Like'
                                 });
                             });
+
+                        // FIX HERE : delete user from Comment table
+
                         // Delete user from the Post table
                         models.Post.destroy({
                                 where: {

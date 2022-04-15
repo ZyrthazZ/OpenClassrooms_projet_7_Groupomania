@@ -4,8 +4,8 @@ var router = express.Router();
 var emailValidator = require('../middleware/emailValidator');
 var passwordValidator = require('../middleware/passwordValidator');
 var usernameValidator = require('../middleware/usernameValidator');
-var usersCtrl = require("../controllers/usersCtrl");
 var auth_user = require("../middleware/auth_user");
+var usersCtrl = require("../controllers/usersCtrl");
 
 //Routes 
 
