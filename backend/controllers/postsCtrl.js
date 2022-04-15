@@ -184,6 +184,9 @@ module.exports = {
                                     error: 'cannot delete Like'
                                 });
                             })
+                            
+                            //FIX HERE : delete comments from Comment table
+                            
                         //Delete the post
                         models.Post.destroy({
                                 where: {
