@@ -1,5 +1,6 @@
 
-modifier les models pour ajouter les commentaires
+créér une route pour les posts permettant d'afficher un post en particulier avec ses commentaires
+mettre à jour les anciennes routes pour prendre en compte les commentaires
 ajouter des routes pour les commentaires
 ajouter / modifier les routes pour l'admin
 

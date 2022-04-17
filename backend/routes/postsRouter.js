@@ -1,10 +1,11 @@
 //Imports
-var express = require("express");
-var router = express.Router();
-var postsCtrl = require("../controllers/postsCtrl");
-var postValidator = require("../middleware/postValidator");
-var auth_post = require('../middleware/auth_post');
-var auth_user = require('../middleware/auth_user');
+
+const express = require("express");
+const router = express.Router();
+const postsCtrl = require("../controllers/postsCtrl");
+const postValidator = require("../middleware/postValidator");
+const auth_post = require('../middleware/auth_post');
+const auth_user = require('../middleware/auth_user');
 
 
 

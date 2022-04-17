@@ -1,10 +1,11 @@
 //Imports
 
-var express = require('express');
-var bodyParser = require('body-parser');
-var usersRouter = require("./routes/usersRouter");
-var postsRouter = require("./routes/postsRouter");
-var likesRouter = require("./routes/likesRouter");
+const express = require('express');
+const bodyParser = require('body-parser');
+const usersRouter = require("./routes/usersRouter");
+const postsRouter = require("./routes/postsRouter");
+const likesRouter = require("./routes/likesRouter");
+const commentsRouter = require("./routes/commentsRouter");
 const dotenv = require('dotenv');
 
 
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 app.use("/api/", usersRouter);
 app.use("/api/", postsRouter);
 app.use("/api/", likesRouter);
+app.use("/api/", commentsRouter);
 
 
 //Exports

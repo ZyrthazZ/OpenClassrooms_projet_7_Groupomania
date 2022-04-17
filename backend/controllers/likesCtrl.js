@@ -1,14 +1,14 @@
 //Imports
 
-var models = require('../models');
-var asyncLib = require('async');
+const models = require('../models');
+const asyncLib = require('async');
 
 //Routes
 
 module.exports = {
     likePost: function (req, res) {
         //Params
-        var postId = parseInt(req.params.postId);
+        const postId = parseInt(req.params.postId);
 
         //We search for the right Post
         models.Post.findByPk(postId)
