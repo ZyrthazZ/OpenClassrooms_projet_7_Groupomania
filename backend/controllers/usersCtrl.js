@@ -47,7 +47,7 @@ module.exports = {
                             username: req.body.username,
                             password: encryptedPassword,
                             bio: req.body.bio,
-                            isAdmin: 0
+                            isAdmin: false
                         })
                         .then(function (newUser) {
                             callback(newUser);
@@ -63,7 +63,8 @@ module.exports = {
             function (newUser) {
                 if (newUser) {
                     return res.status(201).json({
-                        "userId": newUser.id
+                        "userId": newUser.id,
+                        "isAdmin": newUser.isAdmin
                     })
                 } else {
                     return res.status(500).json({

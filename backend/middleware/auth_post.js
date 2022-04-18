@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.JWT_SIGN_SECRET);
         //Let's extract the userId and the isAdmin from the decodedToken
         req.userId = decodedToken.userId;
-        req.idAdmin = decodedToken.isAdmin;
+        req.isAdmin = decodedToken.isAdmin;
         console.log("req.userId FROM AUTH", req.userId);
         console.log("req.isAdmin FROM AUTH", req.isAdmin);
         console.log("req.params.postId", req.params.postId)

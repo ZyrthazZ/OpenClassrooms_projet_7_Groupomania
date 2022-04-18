@@ -2,9 +2,7 @@
 
 const models = require('../models');
 const asyncLib = require('async');
-const {
-    post
-} = require('../routes/commentsRouter');
+
 
 
 //Routes
@@ -14,7 +12,7 @@ module.exports = {
         console.log("Coucou")
         const postId = req.params.postId;
         const content = req.body.content;
-
+        console.log("req.params.postId", req.params.postId)
         //Waterfall method
         asyncLib.waterfall([
                 function (callback) {
@@ -91,5 +89,63 @@ module.exports = {
         ) //End of waterfall method
     }, //End of function (createComment)
 
+    updateComment: async (req, res) => {
+        //Params
+        const commentId = req.params.commentId
 
+        try {
+            const searchedComment = await models.Comment.findByPk(commentId)
+            if (!searchedComment) {
+                res.status(404).json({
+                    error: 'comment not found'
+                })
+            } else {
+                console.log("searchedComment", searchedComment)
+
+                const updatedComment = await searchedComment.update({
+                    content: (req.body.content ? req.body.content : searchedComment.bodycontent)
+                })
+                if (updatedComment) {
+                    res.status(200).json(
+                        updatedComment
+                    )
+                }
+                console.log("comment has been updated !")
+            }
+
+        } catch (err) {
+            console.log('Error in updateComment : ', err)
+            res.status(500).json({
+                "error": "no comment found"
+            });
+        }
+    }, //End of function (updateComment)
+
+    deleteComment: async (req, res) => {
+        //Params
+        const commentId = req.params.commentId
+
+        try {
+            const searchedComment = await models.Comment.findByPk(commentId)
+            if (!searchedComment) {
+                res.status(404).json({
+                    error: 'comment not found'
+                })
+            } else {
+                const destroyedComment = await searchedComment.destroy()
+
+                if (destroyedComment) {
+                    res.status(200).json({
+                        message: 'comment has been deleted !'
+                    })
+                }
+            }
+
+        } catch (err) {
+            console.log('Error in deleteComment : ', err)
+            res.status(500).json({
+                "error": "no comment found"
+            });
+        }
+    }, //End of function (deleteComment)
 };
