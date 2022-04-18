@@ -9,54 +9,37 @@ const {
 
 // Routes
 module.exports = {
-    createPost: function (req, res) {
-        asyncLib.waterfall([
-                function (callback) {
-                    models.User.findOne({
-                            where: {
-                                id: req.userId
-                            }
-                        })
-                        .then(function (userFound) {
-                            callback(null, userFound);
-                        })
-                        .catch(function (err) {
-                            return res.status(500).json({
-                                'error': 'unable to verify user'
-                            });
-                        });
-                }, //End of function (callback)
+    createPost: async (req, res) => {
 
-                function (userFound, callback) {
-                    if (userFound) {
-                        models.Post.create({
-                                title: req.body.title,
-                                content: req.body.content,
-                                UserId: userFound.id
-                            })
-                            .then(function (newPost) {
-                                callback(newPost);
-                            });
-                    } else {
-                        res.status(404).json({
-                            error: 'user not found'
-                        });
-                    }
-                }, //End of function (userFound, callback)
-
-            ], //Exit of method waterfall (NOT THE END)
-
-            function (newPost) {
-                if (newPost) {
-                    return res.status(201).json(newPost);
-                } else {
-                    return res.status(500).json({
-                        'error': 'cannot create post'
-                    });
-                }
-            }, //End of function (newPost)
-
-        ); //End of waterfall method
+        try {
+            //Search the user
+            const searchedUser = await models.User.findByPk(req.userId)
+            //User not found
+            if (!searchedUser) {
+                return res.status(404).json({
+                    error: 'user not found'
+                })
+            }
+            console.log("searchedUser", searchedUser)
+            //Create the post
+            const createdPost = await models.Post.create({
+                title: req.body.title,
+                content: req.body.content,
+                UserId: searchedUser.id
+            })
+            //Cannot create post
+            if (!createdPost) {
+                return res.status(404).json({
+                    error: 'cannot create post'
+                })
+            }
+            return res.status(201).json(createdPost)
+        } catch (err) {
+            console.log('Error in deleteUser : ', err)
+            res.status(500).json({
+                "error": "cannot create post"
+            });
+        }
     }, //End of function createPost
 
 
@@ -83,7 +66,7 @@ module.exports = {
             }
 
             if (searchedPost && searchedComments) {
-                res.status(201).json({
+                res.status(200).json({
                     postAndComments: {
                         searchedPost,
                         searchedComments
@@ -138,124 +121,104 @@ module.exports = {
         }
     }, //End of listPosts
 
-    updatePost: (req, res) => {
+    updatePost: async (req, res) => {
         //Params
         const postId = req.params.postId;
-        //Search for the post with postId in the req.params
-        asyncLib.waterfall([
-                function (callback) {
-                    models.Post.findByPk(postId)
-                        .then((postFound) => {
-                            console.log("postFound", postFound)
-                            callback(null, postFound)
-                        })
-                        .catch((err) => {
-                            res.status(401).json({
-                                error: 'unable to find post'
-                            })
-                        })
-                }, //End of function (callback)
 
-                function (postFound, callback) {
-                    if (postFound) {
-                        postFound.update({
-                                //If req.body.title if filled, replace the title in the userfound object
-                                title: (req.body.title ? req.body.title : postFound.title),
-                                //If req.body.content if filled, replace the content in the userfound object
-                                content: (req.body.content ? req.body.content : postFound.content),
-                                //If req.body.attachment if filled, replace the attachment in the userfound object
-                                attachment: (req.body.attachment ? req.body.attachment : postFound.attachment)
-                            })
-                            .then((postFound) => {
-                                callback(postFound)
-                            })
-                    } else {
-                        res.status(402).json({
-                            error: 'post not found'
-                        })
-                    }
-                }, //End of function (postFound, callback)
-
-            ], //Exit of waterfall method (NOT THE END)
-
-            function (postFound) {
-                if (postFound) {
-                    res.status(201).json(
-                        postFound
-                    )
-                } else {
-                    res.status(404).json({
-                        error: 'unable to get the postFound'
-                    })
-                }
-            }, //End of function(postFound)
-        ) //End of waterfall method
+        try {
+            //Search for the post
+            const searchedPost = await models.Post.findByPk(postId)
+            //Post not found
+            if (!searchedPost) {
+                return res.status(404).json({
+                    error: 'post not found'
+                })
+            }
+            //Update the post
+            const postUpdated = await searchedPost.update({
+                //If req.body.title if filled, replace the title in the userfound object
+                title: (req.body.title ? req.body.title : searchedPost.title),
+                //If req.body.content if filled, replace the content in the userfound object
+                content: (req.body.content ? req.body.content : searchedPost.content),
+                //If req.body.attachment if filled, replace the attachment in the userfound object
+                attachment: (req.body.attachment ? req.body.attachment : searchedPost.attachment)
+            })
+            //Cannot update post
+            if (!postUpdated) {
+                return res.status(404).json({
+                    error: 'cannot update post'
+                })
+            }
+            return res.status(201).json(postUpdated)
+        } catch (err) {
+            console.log('Erreur in updatePost : ', err)
+            res.status(500).json({
+                "error": "cannot update post"
+            });
+        }
     }, //End of function updatePost
 
-    deletePost: (req, res) => {
+    deletePost: async (req, res) => {
         //Params
         const postId = req.params.postId
-        asyncLib.waterfall([
-                function (callback) {
-                    models.Post.findByPk(postId)
-                        .then((postFound) => {
-                            console.log("postFound", postFound)
-                            callback(null, postFound)
-                        })
-                        .catch((err) => {
-                            res.status(401).json({
-                                error: 'post not found'
-                            });
-                        })
-                }, //End of function (callback)
 
-                function (postFound, callback) {
-                    if (postFound) {
-                        //Delete the likes related to the post
-                        models.Like.destroy({
-                                where: {
-                                    postId: postId
-                                }
-                            })
-                            .then(() => {
-                                console.log("likes related to post deleted from the Like table !")
-                            })
-                            .catch((err) => {
-                                res.status(500).json({
-                                    error: 'cannot delete Like'
-                                });
-                            })
+        try {
+            //Search the post
+            const searchedPost = await models.Post.findByPk(postId)
+            //Cannot find post
+            if (!searchedPost) {
+                return res.status(404).json({
+                    error: 'cannot find post'
+                })
+            }
+            console.log("searchedPost", searchedPost)
 
-                        //FIX HERE : delete comments from Comment table
-
-                        //Delete the post
-                        models.Post.destroy({
-                                where: {
-                                    userId: req.userId,
-                                    id: postId
-                                }
-                            })
-                            .then((postFound) => {
-                                console.log("post deleted from the Post table ! ")
-                                callback(postFound)
-                            })
-                            .catch((err) => {
-                                res.status(500).json({
-                                    error: 'cannot delete post'
-                                });
-                            })
-                    }
-                }, //End of function (postFound, callback)
-
-            ], //Exit of waterfall method (NOT THE END)
-            function (postFound) {
-                if (postFound) {
-                    res.status(205).json({
-                        message: 'post deleted'
-                    })
+            //Delete the likes related to the post
+            const deleteLikesFromPost = models.Like.destroy({
+                where: {
+                    postId: postId
                 }
-            }, //End of function (postFound)
+            })
+            //Cannot delete Like
+            if (!deleteLikesFromPost) {
+                return res.status(404).json({
+                    error: 'cannot delete Like'
+                })
+            }
 
-        ) //End of waterfall method
+            //Delete the comments related to the post
+            const deleteCommentsFromPost = models.Comment.destroy({
+                where: {
+                    postId: postId
+                }
+            })
+            //Cannot delete Comment
+            if (!deleteCommentsFromPost) {
+                return res.status(404).json({
+                    error: 'cannot delete Comment'
+                })
+            }
+
+            //Delete the post
+            const postDeleted = models.Post.destroy({
+                where: {
+                    id: postId
+                }
+            })
+            //Cannot delete post
+            if (!postDeleted) {
+                return res.status({
+                    error: 'cannot delete post'
+                })
+            }
+            return res.status(200).json({
+                message: 'post deleted !'
+            })
+        } catch (err) {
+            console.log('Erreur in deletePost : ', err)
+            res.status(500).json({
+                "error": "cannot delete post"
+            });
+        }
     } //End of function (deletePost)
 }

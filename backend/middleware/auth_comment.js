@@ -22,7 +22,7 @@ module.exports = async (req, res, next) => {
 
         console.log("userId", userId)
         console.log("isAdmin", isAdmin)
-        console.log("req.params.postId", req.params.postId)
+        console.log("req.params.commentId", req.params.commentId)
 
 
         //If user is amdmin
@@ -32,12 +32,12 @@ module.exports = async (req, res, next) => {
             next();
         } else {
             console.log("isNotAdmin")
-            //Check if there is a req.params.postId in the request
-            if (req.params.postId) {
-                console.log("there is a postId")
-                const checkUserId = await models.Post.findOne({
+            //Check if there is a req.params.commentId in the request
+            if (req.params.commentId) {
+                console.log("there is a commentId")
+                const checkUserId = await models.Comment.findOne({
                     where: {
-                        id: req.params.postId,
+                        id: req.params.commentId,
                         userId: userId
                     }
                 });
@@ -48,7 +48,7 @@ module.exports = async (req, res, next) => {
                 if (checkUserId.userId && checkUserId.userId !== userId) { // User login is not user that owns post
                     throw "Invalid user ID";
                 } else { // User login is user that owns post
-                    console.log("Authentified request with the postId !")
+                    console.log("Authentified request with the commentId !")
                     next();
                 }
                 //Let's check if the post contains a userId equal to the extracted userId

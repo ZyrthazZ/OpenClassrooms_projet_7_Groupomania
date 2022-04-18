@@ -10,417 +10,361 @@ const asyncLib = require("async");
 //Routes
 
 module.exports = {
-    register: function (req, res) {
-        //Méthode waterfall pour plus de lisibilité
-        asyncLib.waterfall([
-                function (callback) {
-                    models.User.findOne({
-                            attributes: ['email'],
-                            where: {
-                                email: req.body.email
-                            }
-                        })
-                        .then(function (userFound) {
-                            callback(null, userFound);
-                        })
-                        .catch(function (err) {
-                            return res.status(500).json({
-                                error: "unable to verify user"
-                            });
-                        });
-                }, //End of function(done)
-                function (userFound, callback) {
-                    if (!userFound) {
-                        bcrypt.hash(req.body.password, 5, function (err, encryptedPassword) {
-                            callback(null, userFound, encryptedPassword)
-                        })
-                    } else {
-                        return res.status(409).json({
-                            'error': 'user already exist'
-                        });
-                    }
-                }, //End of function(userFound, callback)
+    register: async (req, res) => {
 
-                function (userFound, encryptedPassword, callback) {
-                    var newUser = models.User.create({
-                            email: req.body.email,
-                            username: req.body.username,
-                            password: encryptedPassword,
-                            bio: req.body.bio,
-                            isAdmin: false
-                        })
-                        .then(function (newUser) {
-                            callback(newUser);
-                        })
-                        .catch(function (err) {
-                            return res.status(500).json({
-                                error: "cannot add user"
-                            });
-                        })
-                }, //End of function(userFound, encryptedPassword, done)
-
-            ], //Exit of waterfall method (NOT THE END!!!)
-            function (newUser) {
-                if (newUser) {
-                    return res.status(201).json({
-                        "userId": newUser.id,
-                        "isAdmin": newUser.isAdmin
-                    })
-                } else {
-                    return res.status(500).json({
-                        error: "cannot add user"
-                    });
+        try {
+            //We check if user already exists
+            const searchedUser = await models.User.findOne({
+                attributes: ['email'],
+                where: {
+                    email: req.body.email
                 }
-            } //End of function(newUser)
-        ); //End of the waterfall method
+            })
+
+            //User already exist
+            if (searchedUser) {
+                res.status(500).json({
+                    error: "user already exist"
+                });
+            } else {
+                //We crypt the password with bcrypt function
+                const encryptedPassword = await bcrypt.hash(req.body.password, 5)
+                if (!encryptedPassword) {
+                    res.status(404).json({
+                        error: 'unable to encrypt password'
+                    })
+                }
+                //We create the newUser
+                const newUser = await models.User.create({
+                    email: req.body.email,
+                    username: req.body.username,
+                    password: encryptedPassword,
+                    bio: req.body.bio,
+                    isAdmin: false
+                })
+                return res.status(201).json({
+                    "userId": newUser.id,
+                    "isAdmin": newUser.isAdmin
+                })
+            }
+        } catch (err) {
+            console.log('Error in register : ', err)
+            res.status(500).json({
+                "error": "cannot create user"
+            });
+        }
     }, //End of register function
 
-    login: function (req, res) {
-        asyncLib.waterfall([
-                function (callback) {
-                    models.User.findOne({
-                            where: {
-                                email: req.body.email
-                            }
-                        })
-                        .then(function (userFound) {
-                            callback(null, userFound);
-                        })
-                        .catch(function (err) {
-                            res.status(500).json({
-                                error: "unable to verify user"
-                            });
-                        });
-                }, //End of function(callback)
+    login: async (req, res) => {
 
-                function (userFound, callback) {
-                    if (userFound) {
-                        bcrypt.compare(req.body.password, userFound.password, function (errBcrypt, resBcrypt) {
-                            callback(null, userFound, resBcrypt);
-                        });
-                    } else {
-                        return res.status(404).json({
-                            error: 'user not exist in DB'
-                        });
-                    }
-                }, //End of function(userFound, callback)
-
-                function (userFound, resBcrypt, callback) {
-                    if (resBcrypt) {
-                        callback(userFound);
-                    } else {
-                        return res.status(403).json({
-                            error: 'Invalid password'
-                        });
-                    }
-                }, //End of function (userFound, resBcrypt, callback)
-
-            ], //Exit of waterfall method (NOT THE END!!!)
-            function (userFound) {
-                if (userFound) {
-                    return res.status(201).json({
-                        userId: userFound.id,
-                        token: jwt.sign({
-                            userId: userFound.id,
-                            isAdmin: userFound.isAdmin
-                        }, process.env.JWT_SIGN_SECRET, {
-                            expiresIn: '1h'
-                        })
-                    });
-                } else {
-                    return res.status(500).json({
-                        error: 'Unable to log on user'
-                    });
+        try {
+            //Search if user exist
+            const searchedUser = await models.User.findOne({
+                where: {
+                    email: req.body.email
                 }
-            } //End of function(userFound)
-        ); //End of waterfall method
+            })
+
+            //If user does not exist
+            if (!searchedUser) {
+                res.status(404).json({
+                    error: 'user not found'
+                })
+            } else {
+                console.log("searchedUser", searchedUser)
+                //Compare the password with the encryptedPassword
+                const isResBcrypt = await bcrypt.compare(req.body.password, searchedUser.password)
+
+                //Invalid password
+                if (!isResBcrypt) {
+                    res.status(404).json({
+                        error: 'Invalid password !'
+                    })
+                }
+
+                //The user can log in, we sign the token with the userId and with the isAdmin boolean
+                return res.status(201).json({
+                    userId: searchedUser.id,
+                    token: jwt.sign({
+                        userId: searchedUser.id,
+                        isAdmin: searchedUser.isAdmin
+                    }, process.env.JWT_SIGN_SECRET, {
+                        expiresIn: '1h'
+                    })
+                });
+            }
+        } catch (err) {
+            console.log('Error in login : ', err)
+            res.status(500).json({
+                "error": "cannot log user"
+            });
+        }
     }, //End of function login
 
-    getUserProfile: function (req, res) {
-        models.User.findOne({
+    getUserProfile: async (req, res) => {
+        try {
+            //Search the user
+            const searchedUser = await models.User.findOne({
                 attributes: ['id', 'email', 'username', 'bio'],
+                where: {
+                    id: req.params.userId
+                }
+            })
+
+            //User not found
+            if (!searchedUser) {
+                res.status(404).json({
+                    error: 'user not found'
+                })
+            } else {
+                console.log("searchedUser", searchedUser)
+                return res.status(201).json(searchedUser)
+            }
+        } catch (err) {
+            console.log('Error in getUserProfile : ', err)
+            res.status(500).json({
+                "error": "cannot get user information"
+            });
+        }
+    }, //End of function getUserProfile
+
+    updateUserProfile: async (req, res) => {
+        try {
+            //Search for the user
+            const searchedUser = await models.User.findOne({
+                attributes: ['id', 'username', 'bio'],
+                where: {
+                    id: req.params.userId
+                }
+            })
+            //User not found
+            if (!searchedUser) {
+                return res.status(404).json({
+                    error: 'user not found'
+                })
+            }
+            console.log("searchedUser", searchedUser)
+            //Update the searchedUser
+            const updatedUserProfile = await searchedUser.update({
+                //If req.body.username if filled, replace the username in the searchedUser object
+                username: (req.body.username ? req.body.username : searchedUser.username),
+                //If req.body.bio if filled, replace the bio in the searchedUser object
+                bio: (req.body.bio ? req.body.bio : searchedUser.bio)
+            })
+
+            if (!updatedUserProfile) {
+                res.status(404).json({
+                    error: 'unable to update user profile'
+                })
+            }
+            return res.status(200).json(updatedUserProfile)
+
+        } catch (err) {
+            console.log('Error in updateUserProfile : ', err)
+            res.status(500).json({
+                "error": "cannot update user profile"
+            });
+        }
+    }, //End of function updateUserProfile
+
+    updateUserPassword: async (req, res) => {
+
+        //Search the user
+        try {
+            const searchedUser = await models.User.findOne({
+                attributes: ['id', 'password'],
                 where: {
                     id: req.userId
                 }
             })
-            .then(function (user) {
-                console.log("username", user.username)
-                if (user) {
-                    res.status(201).json(user);
-                } else {
+            //User not found
+            if (!searchedUser) {
+                res.status(404).json({
+                    error: 'user not found'
+                })
+            } else {
+                console.log("searchedUser", searchedUser)
+                //We check the user with his ancient password
+                const isPasswordChecked = await bcrypt.compare(req.body.password, searchedUser.password)
+                //If the ancient password is incorrect
+                if (!isPasswordChecked) {
                     res.status(404).json({
-                        error: "user not found"
+                        error: 'Invalid password'
                     });
+                } else {
+                    //New password must be confirmed
+                    const similarNewPasswords = await (req.body.newPassword === req.body.confirmNewPassword)
+                    //The new passwords don't match
+                    if (!similarNewPasswords) {
+                        res.status(400).json({
+                            error: "New Passwords don't match !"
+                        })
+                    }
+                    //We hash the newPassword with bcrypt function
+                    const encryptedNewPassword = await bcrypt.hash(req.body.newPassword, 5)
+                    //If the new password is not hashed
+                    if (!encryptedNewPassword) {
+                        res.status(404).json({
+                            error: 'cannot crypt new password !'
+                        })
+                    }
+                    //Update the user with the new password encrypted 
+                    const updatedUserPassword = await searchedUser.update({
+                        password: encryptedNewPassword
+                    })
+                    //Can't update the password
+                    if (!updatedUserPassword) {
+                        res.status(404).json({
+                            error: 'unable to update user password'
+                        })
+                    }
+                    return res.status(200).json({
+                        message: 'password updated !'
+                    })
                 }
-            })
-            .catch(function (err) {
-                res.status(500).json({
-                    error: 'cannot fetch user'
-                });
+            }
+        } catch (err) {
+            console.log('Error in updateUserPassword : ', err)
+            res.status(500).json({
+                "error": "cannot update user password"
             });
-    }, //End of function getUserProfile
-
-    updateUserProfile: function (req, res) {
-        asyncLib.waterfall([
-                function (callback) {
-                    models.User.findOne({
-                            attributes: ['id', 'username', 'bio'],
-                            where: {
-                                id: req.userId
-                            }
-                        })
-                        .then(function (userFound) {
-                            callback(null, userFound);
-                        })
-                        .catch(function (err) {
-                            res.status(500).json({
-                                error: 'unable to verify user'
-                            });
-                        });
-                }, //End of function(callback)
-
-                function (userFound, callback) {
-                    if (userFound) {
-                        userFound.update({
-                                //If req.body.username if filled, replace the username in the userfound object
-                                username: (req.body.username ? req.body.username : userFound.username),
-                                //If req.body.bio if filled, replace the bio in the userfound object
-                                bio: (req.body.bio ? req.body.bio : userFound.bio)
-                            })
-                            .then(function (userFound) {
-                                callback(userFound);
-                            })
-                            .catch(function (err) {
-                                res.status(500).json({
-                                    error: 'cannot update user'
-                                });
-                            });
-                    } else {
-                        res.status(404).json({
-                            error: 'user not found'
-                        });
-                    }
-                }, //End of function(userFound, callback)
-            ], //Exit of waterfall method (NOT THE END!!!)
-            function (userFound) {
-                if (userFound) {
-                    res.status(201).json({
-                        userFound
-                    });
-                } else {
-                    res.status(500).json({
-                        error: 'cannot update user profile'
-                    });
-                }
-            }, //End of function(userFound)
-        ); //End of waterfall method
-    }, //End of function updateUserProfile
-
-    updateUserPassword: function (req, res) {
-        asyncLib.waterfall([
-                function (callback) {
-                    console.log("HELLO", req.userId)
-                    models.User.findOne({
-                            attributes: ['id', 'password'],
-                            where: {
-                                id: req.userId
-                            }
-                        })
-                        .then(function (userFound) {
-                            callback(null, userFound);
-                        })
-                        .catch(function (err) {
-                            res.status(500).json({
-                                error: 'unable to verify user'
-                            });
-                        });
-                }, //End of function(callback)
-
-                function (userFound, callback) {
-                    if (userFound) {
-                        // Ask the user to fill his ancient password for security before changing it
-                        bcrypt.compare(req.body.password, userFound.password, function (errBcrypt, resBcrypt) {
-                            callback(null, userFound, resBcrypt);
-                        });
-                    } else {
-                        res.status(404).json({
-                            error: "user not found"
-                        });
-                    }
-                }, //End of function(userFound, callback)
-
-                function (userFound, resBcrypt, callback) {
-                    if (resBcrypt) {
-                        callback(null, userFound);
-                    } else {
-                        return res.status(403).json({
-                            error: 'Invalid password'
-                        });
-                    }
-                }, //End of function (userFound, resBcrypt, callback)
-
-                function (userFound, callback) {
-                    console.log("Coucou")
-
-                    if (req.body.newPassword === req.body.confirmNewPassword) {
-                        bcrypt.hash(req.body.newPassword, 5, function (err, encryptedPassword) {
-                            console.log("encryptedPassword", encryptedPassword);
-                            callback(null, userFound, encryptedPassword)
-                        })
-                    } else {
-                        return res.status(400).json({
-                            error: "Passwords don't match !"
-                        })
-                    }
-                }, //End of function (userFound, callback)
-
-                function (userFound, encryptedPassword, callback) {
-                    if (userFound) {
-                        userFound.update({
-                                password: encryptedPassword
-                            })
-                            .then(function (userFound) {
-                                callback(userFound);
-                            })
-                            .catch(function (err) {
-                                res.status(500).json({
-                                    error: 'cannot update user'
-                                });
-                            });
-                    } else {
-                        res.status(404).json({
-                            error: 'user not found'
-                        });
-                    }
-                }, //End of function (userFound)
-
-            ], //Exit of waterfall method (NOT THE END)
-
-            function (userFound) {
-                if (userFound) {
-                    res.status(201).json({
-                        message: "user password has been updated"
-                    });
-                } else {
-                    res.status(500).json({
-                        error: 'cannot update user profile'
-                    });
-                }
-            }, //End of function(userFound)
-
-        ) //End of waterfall method
+        }
     }, //End of function updateUserPassword
 
-    deleteUserProfile: function (req, res) {
-        asyncLib.waterfall([
-                function (callback) {
-                    models.User.findOne({
-                            where: {
-                                id: req.userId
-                            }
-                        })
-                        .then(function (userFound) {
-                            console.log("userFound", userFound)
-                            callback(null, userFound);
-                        })
-                        .catch(function (err) {
-                            res.status(500).json({
-                                error: 'unable to verify user'
-                            });
-                        });
-                }, //End of function(callback)
-
-                function (userFound, callback) {
-                    if (userFound) {
-                        // Check the user password before deleting the profile
-                        bcrypt.compare(req.body.password, userFound.password, function (errBcrypt, resBcrypt) {
-                            callback(null, userFound, resBcrypt);
-                        });
-                    } else {
-                        res.status(404).json({
-                            error: "user not found"
-                        });
-                    }
-                }, //End of function(userFound, callback)
-
-                function (userFound, resBcrypt, callback) {
-                    if (resBcrypt) {
-                        callback(null, userFound);
-                    } else {
-                        return res.status(403).json({
-                            error: 'Invalid password'
-                        });
-                    }
-                }, //End of function (userFound, resBcrypt, callback)
-
-                function (userFound, callback) {
-                    if (userFound) {
-                        // Delete user from the Like table
-                        models.Like.destroy({
-                                where: {
-                                    userId: req.userId
-                                }
-                            })
-                            .then(function (userFound) {
-                                console.log("User deleted from the Like table")
-                            })
-                            .catch(function (err) {
-                                res.status(500).json({
-                                    error: 'cannot delete Like'
-                                });
-                            });
-
-                        // FIX HERE : delete user from Comment table
-
-                        // Delete user from the Post table
-                        models.Post.destroy({
-                                where: {
-                                    userId: req.userId
-                                }
-                            })
-                            .then(function (userFound) {
-                                console.log("User deleted from the Post table")
-                            })
-                            .catch(function (err) {
-                                res.status(500).json({
-                                    error: 'cannot delete Like'
-                                });
-                            });
-                        // Delete user from the User table
-                        models.User.destroy({
-                                where: {
-                                    id: req.userId
-                                }
-                            })
-                            .then(function (userFound) {
-                                console.log("User deleted from the User table")
-                                callback(userFound);
-                            })
-                            .catch(function (err) {
-                                res.status(502).json({
-                                    error: 'cannot delete Like'
-                                });
-                            });
-                    } else {
-                        res.status(400).json({
-                            error: 'unable to delete user'
-                        });
-                    };
+    deleteUserProfile: async (req, res) => {
+        try {
+            //We search the user
+            const searchedUser = await models.User.findOne({
+                where: {
+                    id: req.params.userId
                 }
-            ], //Exit of waterfall method (NOT THE END)
-
-            function (userFound) {
-                if (userFound) {
-                    res.status(201).json({
-                        message: 'user deleted'
-                    })
-                } else {
+            })
+            //User not found
+            if (!searchedUser) {
+                return res.status(404).json({
+                    error: 'user not found'
+                })
+            }
+            //If isAdmin, don't ask the password of the user
+            if (req.isAdmin) {
+                //Delete likes from the user in the Like table
+                const deleteLikesFromUser = models.Like.destroy({
+                    where: {
+                        userId: req.params.userId
+                    }
+                })
+                if (!deleteLikesFromUser) {
                     res.status(404).json({
-                        error: 'unable to delete user'
+                        error: 'cannot delete Like'
                     })
                 }
-            }, //End of function (userFound)
+                console.log("likes deleted from the Like table")
+                //Delete comments from the user in the comment table
+                const deleteCommentsFromUser = models.Comment.destroy({
+                    where: {
+                        userId: req.params.userId
+                    }
+                })
+                if (!deleteCommentsFromUser) {
+                    res.status(404).json({
+                        error: 'cannot delete Comment'
+                    })
+                }
+                console.log("comments deleted from the Comment table")
+                //Delete posts from the user in the post table
+                const deletePostsFromUser = models.Post.destroy({
+                    where: {
+                        userId: req.params.userId
+                    }
+                })
+                if (!deletePostsFromUser) {
+                    res.status(404).json({
+                        error: 'cannot delete Post'
+                    })
+                }
+                console.log("posts deleted from the Post table")
+                //Delete user from the user table
+                const deleteUser = models.User.destroy({
+                    where: {
+                        id: req.params.userId
+                    }
+                })
+                if (!deleteUser) {
+                    res.status(404).json({
+                        error: 'cannot delete User'
+                    })
+                }
+                console.log("user deleted from the user table")
+                res.status(200).json({
+                    message: 'user has been deleted !'
+                })
+            }
+            console.log("isNotAdmin")
+            //Check user with ancient password
+            const checkPassword = await bcrypt.compare(req.body.password, searchedUser.password)
+            //Wrong password
+            if (!checkPassword) {
+                return res.status(404).json({
+                    error: 'wrong password !'
+                })
+            }
+            //Delete likes from the user in the Like table
+            const deleteLikesFromUser = models.Like.destroy({
+                where: {
+                    userId: req.params.userId
+                }
+            })
+            if (!deleteLikesFromUser) {
+                return res.status(404).json({
+                    error: 'cannot delete Like'
+                })
+            }
+            console.log("likes deleted from the Like table")
+            //Delete comments from the user in the comment table
+            const deleteCommentsFromUser = models.Comment.destroy({
+                where: {
+                    userId: req.params.userId
+                }
+            })
+            if (!deleteCommentsFromUser) {
+                return res.status(404).json({
+                    error: 'cannot delete Comment'
+                })
+            }
+            console.log("comments deleted from the Comment table")
+            //Delete posts from the user in the post table
+            const deletePostsFromUser = models.Post.destroy({
+                where: {
+                    userId: req.params.userId
+                }
+            })
+            if (!deletePostsFromUser) {
+                return res.status(404).json({
+                    error: 'cannot delete Post'
+                })
+            }
+            console.log("posts deleted from the Post table")
+            //Delete user from the user table
+            const deleteUser = models.User.destroy({
+                where: {
+                    id: req.params.userId
+                }
+            })
+            if (!deleteUser) {
+                return res.status(404).json({
+                    error: 'cannot delete User'
+                })
+            }
+            console.log("user deleted from the user table")
+            return res.status(200).json({
+                message: 'user has been deleted !'
+            })
 
-        ); //End of waterfall method
+        } catch (err) {
+            console.log('Error in deleteUser : ', err)
+            res.status(500).json({
+                "error": "cannot delete user"
+            });
+        }
     }, //End of deleteUserProfile
 }; //End of modules.exports

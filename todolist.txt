@@ -1,32 +1,9 @@
 
-mettre à jour les anciennes routes pour prendre en compte les commentaires
-ajouter des routes pour les commentaires
-ajouter / modifier les routes pour l'admin
 
 //Remettre la BDD à zéro : 
 => sequelize db:drop
 => sequelize db:create 
 => sequelize db:migrate
 
-if(admin) {
-            next();
-        } else {
-            
-        }
 
-//req.path == '/api/user'
-        if(req.method == 'put' || req.method == 'delete') {
-            var checkUserId = await models.Post.findOne({
-                userId: req.userId
-            });
-            if(!checkUserId) {
-                //unahtorized
-            }
-            //authorization
-        } else {
-            
-        }
-        
-        => ESSAI POUR LES ROUTES ADMINS PLUS TARD
-        
-//
+pour encoder le mot de passe dès le frontend : crypto-js
