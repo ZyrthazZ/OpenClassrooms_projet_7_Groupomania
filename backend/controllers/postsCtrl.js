@@ -6,7 +6,6 @@ const {
 } = require('../routes/postsRouter');
 
 // Constants
-const ITEMS_LIMIT = 50;
 
 // Routes
 module.exports = {
@@ -60,17 +59,59 @@ module.exports = {
         ); //End of waterfall method
     }, //End of function createPost
 
-    listPosts: function (req, res) {
-        var fields = req.query.fields;
-        var limit = parseInt(req.query.limit);
-        var offset = parseInt(req.query.offset);
-        var order = req.query.order;
-        console.log("req.userId FROM CONTROLLER", req.userId)
-        if (limit > ITEMS_LIMIT) {
-            limit = ITEMS_LIMIT;
-        }
 
-        models.Post.findAll({
+    listOnePost: async (req, res) => {
+        //Params
+        postId = req.params.postId
+        try {
+            const searchedPost = await models.Post.findByPk(postId)
+            if (!searchedPost) {
+                res.status(404).json({
+                    error: "post not found"
+                })
+
+            }
+            const searchedComments = await models.Comment.findAll({
+                where: {
+                    postId: postId
+                }
+            })
+            if (!searchedComments) {
+                res.status(404).json({
+                    error: 'comments not found !'
+                })
+            }
+
+            if (searchedPost && searchedComments) {
+                res.status(201).json({
+                    postAndComments: {
+                        searchedPost,
+                        searchedComments
+                    }
+                })
+            }
+
+        } catch (err) {
+            console.log('Error in listOnePost : ', err)
+            res.status(500).json({
+                "error": "no post found"
+            });
+        }
+    }, //End of function (listOnePost)
+
+    listAllPosts: async function (req, res) {
+        const ITEMS_LIMIT = 50;
+        const {
+            limit: unsafeLimit,
+            offset: unsafeOffset,
+            order,
+            fields
+        } = req.query;
+        const limit = parseInt(unsafeLimit) > ITEMS_LIMIT ? ITEMS_LIMIT : parseInt(unsafeLimit);
+        const offset = parseInt(unsafeOffset);
+
+        try {
+            const payload = {
                 order: [(order != null) ? order.split(':') : ['title', 'ASC']],
                 attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                 limit: (!isNaN(limit)) ? limit : null,
@@ -79,22 +120,22 @@ module.exports = {
                     model: models.User,
                     attributes: ['username']
                 }]
-            })
-            .then(function (posts) {
-                if (posts) {
-                    res.status(200).json(posts);
-                } else {
-                    res.status(404).json({
-                        "error": "no posts found"
-                    });
-                }
-            })
-            .catch(function (err) {
-                console.log(err);
-                res.status(500).json({
-                    "error": "invalid fields"
+            }
+
+            const allPosts = await models.Post.findAll(payload)
+            if (allPosts) {
+                res.status(200).json(allPosts);
+            } else {
+                res.status(404).json({
+                    "error": "no posts found"
                 });
+            }
+        } catch (err) {
+            console.log('Erreur in listAllPosts : ', err)
+            res.status(500).json({
+                "error": "no posts found"
             });
+        }
     }, //End of listPosts
 
     updatePost: (req, res) => {
@@ -184,9 +225,9 @@ module.exports = {
                                     error: 'cannot delete Like'
                                 });
                             })
-                            
-                            //FIX HERE : delete comments from Comment table
-                            
+
+                        //FIX HERE : delete comments from Comment table
+
                         //Delete the post
                         models.Post.destroy({
                                 where: {
