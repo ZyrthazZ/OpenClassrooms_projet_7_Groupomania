@@ -1,9 +1,7 @@
 
+Ajouter aux users une image de profile
 
-//Remettre la BDD à zéro : 
-=> sequelize db:drop
-=> sequelize db:create 
-=> sequelize db:migrate
+
 
 
 pour encoder le mot de passe dès le frontend : crypto-js
