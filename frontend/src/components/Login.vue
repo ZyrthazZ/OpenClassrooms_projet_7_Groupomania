@@ -33,29 +33,23 @@
 
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate';
-import { useAuthStore } from '../stores/auth';
+
 
 export default {
     name: "Login",
 
     setup() {
-        const authStore = useAuthStore()
 
-        return {
-            authStore
-        }
     },
 
     computed: {
         loggedIn() {
-            /* return this.authStore.apple.status.loggedIn; */
-            console.log("this.authStore.apple.status" + this.authStore.apple)
+            return this.$store.state.auth.status.loggedIn;
         },
     },
     created() {
         if (this.loggedIn) {
-            /* this.$router.push("/home"); */
-            console.log("prout")
+            this.$router.push("/home");
         }
     },
 
@@ -67,7 +61,11 @@ export default {
 
     methods: {
         handleLogin(user) {
-            this.authStore.login(user)
+            this.$store.dispatch("auth/login", user).then(
+                () => {
+                    this.$router.push("/home");
+                }
+            );
         },
 
         validateEmail(value) {
