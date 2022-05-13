@@ -33,17 +33,29 @@
 
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate';
-import AuthService from '../services/auth.service';
 import { useAuthStore } from '../stores/auth';
 
 export default {
-/*     name: "Login", */
+    name: "Login",
 
     setup() {
         const authStore = useAuthStore()
-        
+
         return {
             authStore
+        }
+    },
+
+    computed: {
+        loggedIn() {
+            /* return this.authStore.apple.status.loggedIn; */
+            console.log("this.authStore.apple.status" + this.authStore.apple)
+        },
+    },
+    created() {
+        if (this.loggedIn) {
+            /* this.$router.push("/home"); */
+            console.log("prout")
         }
     },
 
@@ -54,15 +66,10 @@ export default {
     },
 
     methods: {
-        /* login(user) {
-            AuthService.login(user);
-        }, */
         handleLogin(user) {
             this.authStore.login(user)
         },
-        onSubmit() {
-            console.log("Submitted");
-        },
+
         validateEmail(value) {
             //If the field is empty
             if (!value) {

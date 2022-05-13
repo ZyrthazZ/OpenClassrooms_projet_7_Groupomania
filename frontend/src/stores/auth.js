@@ -3,7 +3,7 @@ import {
 } from 'pinia'
 import AuthService from '../services/auth.service'
 const user = JSON.parse(localStorage.getItem('user'));
-const initialState = user ? {status: {loggedIn: true}, user} : {status: {loggedIn: false}, user: null};
+const initialState = /* user ? {status: {loggedIn: true}, user} : {status: {loggedIn: false}, user: null}; */ user
 
 export const useAuthStore = defineStore({
   id: 'auth',
@@ -11,9 +11,12 @@ export const useAuthStore = defineStore({
     apple: initialState,
   }),
 
+
+  /* Azertyui79* */
   actions: {
     login(user) {
       return AuthService.login(user).then(user => {
+          console.log("apple" + user)
           this.loginSuccess(user);
           return Promise.resolve(user);
         },
