@@ -61,11 +61,11 @@ export default {
 
     methods: {
         handleLogin(user) {
-            this.$store.dispatch("auth/login", user).then(
-                () => {
+            this.$store.dispatch("auth/login", user)
+                .then(() => {
                     this.$router.push("/home");
                 }
-            );
+                );
         },
 
         validateEmail(value) {

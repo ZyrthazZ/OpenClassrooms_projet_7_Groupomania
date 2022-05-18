@@ -3,18 +3,23 @@
 
         <img src="../assets/logos/icon-left-font-monochrome-white.svg" alt="" class="header__logo">
 
-        <router-link :to="'/home'">
-            <button class="header__profile">
-                <img src="../assets/img/default_profile_pic.jpg" alt="" class="header__profile-img">
-                <span class="header__profile-pseudo">Pseudo utilisateur</span>
-            </button>
-        </router-link>
+        <div class="header__buttons">
+            <router-link :to="'/home'">
+                <button class="header__profile">
+                    <img src="../assets/img/default_profile_pic.jpg" alt="" class="header__profile-img">
+                    <span class="header__profile-pseudo">Pseudo utilisateur</span>
+                </button>
+            </router-link>
+
+            <Logout class="header__logout" />
+        </div>
 
     </header>
 </template>
 
 
-<script>
+<script setup>
+import Logout from '../components/Logout.vue';
 </script>
 
 
@@ -46,7 +51,15 @@
             align-items: center;
             margin: 10px;
         }
-
+    }
+    
+    &__buttons {
+        display: flex;
+    }
+    
+    &__logout {
+        width: 30px;
+        padding-bottom: 20px;
     }
 }
 </style>
