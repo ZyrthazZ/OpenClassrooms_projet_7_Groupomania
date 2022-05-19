@@ -3,34 +3,39 @@
         <img src="../assets/logos/icon-left-font-monochrome-white.svg" alt="" class="header__logo">
     </header>
 
-    <section class="loginSection">
+    <section class="registerSection">
 
-        <div class="loginSection__introduction">
-            <h3>Connexion</h3>
+        <div class="registerSection__introduction">
+            <h3>Inscription</h3>
         </div>
 
-        <Form @submit="handleLogin" action="" method="post" class="loginSection__form">
+        <Form @submit="handleRegister" action="" method="post" class="registerSection__form">
 
-            <div class="loginSection__form-input">
+            <div class="registerSection__form-input">
+                <div>
+                    <Field type="text" :rules="validateUsername" placeholder="Pseudo" name="username" id="username" />
+                </div>
+                <ErrorMessage name="username" class="registerSection__form-errorMessage" />
+
                 <div>
                     <Field type="email" :rules="validateEmail" placeholder="Adresse email" name="email" id="email" />
                 </div>
-                <ErrorMessage name="email" class="loginSection__form-errorMessage" />
+                <ErrorMessage name="email" class="registerSection__form-errorMessage" />
 
                 <div>
                     <Field type="password" :rules="validatePassword" placeholder="Mot de Passe" name="password"
                         id="password" />
                 </div>
-                <ErrorMessage name="password" class="loginSection__form-errorMessage" />
+                <ErrorMessage name="password" class="registerSection__form-errorMessage" />
             </div>
 
-            <button type="submit" class="loginSection__form-button">Se connecter</button>
+            <button type="submit" class="registerSection__form-button">S'inscrire</button>
 
         </Form>
 
-        <p class="loginSection__redirect">
-            Vous n'avez pas de compte chez Groupomania ? <br />
-            Vous pouvez vous <router-link :to="'/register'">inscrire ici !</router-link>
+        <p class="registerSection__redirect">
+            Vous avez déjà un compte chez Groupomania ? <br />
+            <router-link :to="'/login'">Clickez ici</router-link> pour vous connecter !
         </p>
 
     </section>
@@ -39,8 +44,9 @@
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate';
 
+
 export default {
-    name: "Login",
+    name: "Register",
 
     setup() {
 
@@ -72,6 +78,14 @@ export default {
                 );
         },
 
+        handleRegister(user) {
+            this.$store.dispatch("auth/register", user)
+                .then(() => {
+                    this.handleLogin(user);
+                }
+                );
+        },
+
         validateEmail(value) {
             //If the field is empty
             if (!value) {
@@ -95,14 +109,30 @@ export default {
             }
 
             //If the field is not matching the password security
-            const regexPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/
+            const regexPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
             if (!regexPassword.test(value)) {
                 return "Votre mot de passe doit contenir au min 8 caractères, avoir 1 majuscule, 2 chiffres et 1 caractère spécial"
             }
 
             //All is good
             return true;
-        }
+        }, //End of validatePassword
+
+        validateUsername(value) {
+            //If the field is empty
+            if (!value) {
+                return 'Veuillez renseigner le champ pseudo'
+            }
+
+            //If the username doesn't match the regexUsername
+            const regexUsername = /^([\w]){3,15}$/;
+            if (!regexUsername.test(value)) {
+                return "Votre pseudo doit être compris entre entre 3 et 15 caractères et ne contenir aucun caractère spécial"
+            }
+
+            //All is good
+            return true;
+        }, //End of validateUsername
     },
 };
 </script>
@@ -120,7 +150,7 @@ export default {
     }
 }
 
-.loginSection {
+.registerSection {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
