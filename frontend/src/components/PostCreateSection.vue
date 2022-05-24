@@ -5,7 +5,7 @@
         <div class="create__post__introduction">
 
             <span class="create__post__introduction-greetings">
-                Bonjour Pseudo Utilisateur !
+                Bonjour {{ content.username }} !
             </span>
             <br />
             <span class="create__post__introduction-share">
@@ -55,6 +55,21 @@
 </template>
 
 <script>
+export default {
+    name: 'PostCreateSection',
+    data() {
+        return {
+            content: ''
+        }
+    },
+
+    mounted() {
+        this.$store.dispatch("user/getUserProfile")
+            .then(response => {
+                this.content = response.data
+            })
+    },
+}
 </script>
 
 <style lang="scss">

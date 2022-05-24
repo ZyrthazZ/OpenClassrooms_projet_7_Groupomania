@@ -35,7 +35,7 @@
 
         <p class="registerSection__redirect">
             Vous avez déjà un compte chez Groupomania ? <br />
-            <router-link :to="'/login'">Clickez ici</router-link> pour vous connecter !
+            <router-link :to="'/login'">Cliquez ici</router-link> pour vous connecter !
         </p>
 
     </section>
