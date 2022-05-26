@@ -34,6 +34,13 @@ app.use((req, res, next) => {
     next();
 });
 
+//path indicates the way to the server
+const path = require('path');
+
+//Tells express to deal and serve on the server and the API calls the images, with the folder name 'images'
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+
 //Call the routes
 app.use("/api/", usersRouter);
 app.use("/api/", postsRouter);

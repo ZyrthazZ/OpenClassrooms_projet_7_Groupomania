@@ -1,20 +1,21 @@
 //Imports
-var express = require("express");
-var router = express.Router();
-var emailValidator = require('../middleware/emailValidator');
-var passwordValidator = require('../middleware/passwordValidator');
-var usernameValidator = require('../middleware/usernameValidator');
-var auth_user = require("../middleware/auth_user");
-var usersCtrl = require("../controllers/usersCtrl");
+const express = require("express");
+const router = express.Router();
+const multer = require("../middleware/multer-config");
+const emailValidator = require('../middleware/emailValidator');
+const passwordValidator = require('../middleware/passwordValidator');
+const usernameValidator = require('../middleware/usernameValidator');
+const auth_user = require("../middleware/auth_user");
+const usersCtrl = require("../controllers/usersCtrl");
 
 //Routes 
 
-router.post('/users/register/', emailValidator, usernameValidator, passwordValidator, usersCtrl.register);
+router.post('/users/register/', emailValidator, usernameValidator, passwordValidator, multer, usersCtrl.register);
 router.post('/users/login/', emailValidator, passwordValidator, usersCtrl.login);
-router.get('/users/:userId', auth_user, usersCtrl.getUserProfile);
-router.put('/users/:userId/updateProfile', auth_user, usersCtrl.updateUserProfile);
+router.get('/users/:userId', auth_user, multer, usersCtrl.getUserProfile);
+router.put('/users/:userId/updateProfile', auth_user, multer, usersCtrl.updateUserProfile);
 router.put('/users/me/updatePassword', auth_user, passwordValidator, usersCtrl.updateUserPassword);
-router.delete('/users/:userId/deleteProfile', auth_user, usersCtrl.deleteUserProfile);
+router.delete('/users/:userId/deleteProfile', auth_user, multer, usersCtrl.deleteUserProfile);
 
 
 //Exports
