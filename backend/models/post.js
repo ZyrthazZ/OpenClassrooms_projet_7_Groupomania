@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   Post.init({
     title: DataTypes.STRING,
     content: DataTypes.STRING,
-    attachment: DataTypes.STRING,
+    imageUrl: DataTypes.STRING,
     likes: {
       type: DataTypes.INTEGER,
       defaultValue: 0

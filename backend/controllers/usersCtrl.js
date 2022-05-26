@@ -40,6 +40,7 @@ module.exports = {
                     username: req.body.username,
                     password: encryptedPassword,
                     bio: req.body.bio,
+                    profilePic: 'http://localhost:8080/images/profils/default_profile_pic.jpg',
                     isAdmin: false
                 })
                 return res.status(201).json({
@@ -105,7 +106,7 @@ module.exports = {
         try {
             //Search the user
             const searchedUser = await models.User.findOne({
-                attributes: ['id', 'email', 'username', 'bio'],
+                attributes: ['id', 'email', 'username', 'bio', 'profilePic'],
                 where: {
                     id: req.params.userId
                 }
@@ -132,7 +133,7 @@ module.exports = {
         try {
             //Search for the user
             const searchedUser = await models.User.findOne({
-                attributes: ['id', 'username', 'bio'],
+                attributes: ['id', 'username', 'bio', 'profilePic'],
                 where: {
                     id: req.params.userId
                 }
@@ -146,10 +147,12 @@ module.exports = {
             console.log("searchedUser", searchedUser)
             //Update the searchedUser
             const updatedUserProfile = await searchedUser.update({
-                //If req.body.username if filled, replace the username in the searchedUser object
+                //If req.body.username is filled, replace the username in the searchedUser object
                 username: (req.body.username ? req.body.username : searchedUser.username),
-                //If req.body.bio if filled, replace the bio in the searchedUser object
-                bio: (req.body.bio ? req.body.bio : searchedUser.bio)
+                //If req.body.bio is filled, replace the bio in the searchedUser object
+                bio: (req.body.bio ? req.body.bio : searchedUser.bio),
+                //If req.body.profilePic is filled, replace it with req.file.filename, if not keep the searchedUser.profilePic
+                profilePic: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : searchedUser.profilePic)
             })
 
             if (!updatedUserProfile) {

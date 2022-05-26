@@ -25,6 +25,7 @@ module.exports = {
             const createdPost = await models.Post.create({
                 title: req.body.title,
                 content: req.body.content,
+                imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
                 UserId: searchedUser.id
             })
             //Cannot create post
@@ -35,7 +36,7 @@ module.exports = {
             }
             return res.status(201).json(createdPost)
         } catch (err) {
-            console.log('Error in deleteUser : ', err)
+            console.log('Error in createPost : ', err)
             res.status(500).json({
                 "error": "cannot create post"
             });
@@ -136,12 +137,12 @@ module.exports = {
             }
             //Update the post
             const postUpdated = await searchedPost.update({
-                //If req.body.title if filled, replace the title in the userfound object
+                //If req.body.title is filled, replace the title in the searchedPost object
                 title: (req.body.title ? req.body.title : searchedPost.title),
-                //If req.body.content if filled, replace the content in the userfound object
+                //If req.body.content is filled, replace the content in the searchedPost object
                 content: (req.body.content ? req.body.content : searchedPost.content),
-                //If req.body.attachment if filled, replace the attachment in the userfound object
-                attachment: (req.body.attachment ? req.body.attachment : searchedPost.attachment)
+                //If there is a file, replace it with req.file.filename, if not keep the searchedPost.imageUrl
+                imageUrl: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : searchedUser.imageUrl)
             })
             //Cannot update post
             if (!postUpdated) {
