@@ -18,7 +18,7 @@
         <div class="create__post__interface">
 
 
-            <img src="../assets/img/default_profile_pic.jpg" alt="" class="create__post__interface-profilepic">
+            <img :src="content.profilePic" alt="" class="create__post__interface-profilepic">
 
             <form action="" method="post" class="create__post__interface__form">
 
@@ -97,6 +97,7 @@ export default {
         &-profilepic {
             width: 40px;
             height: 40px;
+            object-fit: cover;
             border-radius: 15px;
             margin-right: 10px;
         }

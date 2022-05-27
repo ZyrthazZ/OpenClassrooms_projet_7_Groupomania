@@ -18,7 +18,9 @@ class UserService {
     }
 
     updateUserProfile() {
-
+        return axios.put(API_URL + user.userId + "/updateProfile", {
+            headers: authHeader()
+        })
     }
 
     updateUserPassword() {

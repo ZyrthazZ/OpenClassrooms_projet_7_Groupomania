@@ -13,7 +13,19 @@ export const user = {
                     error => {
                         return Promise.resolve(error);
                     })
-        }
+        },
+
+        updateUserProfile(updatedContent) {
+            return UserService.updateUserProfile(updatedContent)
+                .then(
+                    updatedContent => {
+                        return Promise.resolve(updatedContent);
+                    },
+                    error => {
+                        return Promise.resolve(error);
+                    }
+                )
+        },
     }
 
 }

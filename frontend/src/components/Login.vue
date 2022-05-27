@@ -9,18 +9,16 @@
             <h3>Connexion</h3>
         </div>
 
-        <Form @submit="handleLogin" action="" method="post" class="loginSection__form">
+        <Form @submit="handleLogin" action="" method="put" class="loginSection__form">
 
             <div class="loginSection__form-input">
-                <div>
-                    <Field type="email" :rules="validateEmail" placeholder="Adresse email" name="email" id="email" />
-                </div>
+
+                <Field type="email" :rules="validateEmail" placeholder="Adresse email" name="email" id="email" />
                 <ErrorMessage name="email" class="loginSection__form-errorMessage" />
 
-                <div>
-                    <Field type="password" :rules="validatePassword" placeholder="Mot de Passe" name="password"
-                        id="password" />
-                </div>
+
+                <Field type="password" :rules="validatePassword" placeholder="Mot de Passe" name="password"
+                    id="password" />
                 <ErrorMessage name="password" class="loginSection__form-errorMessage" />
             </div>
 

@@ -1,13 +1,13 @@
 <template>
     <header class="header">
 
-        <img src="../assets/logos/icon-left-font-monochrome-white.svg" alt="" class="header__logo">
+        <img src="../assets/logos/icon-left-font-monochrome-white.svg" alt="Logo Groupomania" class="header__logo">
 
         <div class="header__buttons">
             <router-link :to="'/profile'">
                 <button class="header__profile">
-                    <img src="../assets/img/default_profile_pic.jpg" alt="" class="header__profile-img">
-                    <span class="header__profile-pseudo">{{ content.username }}</span>
+                    <img :src="userContent.profilePic" alt="" class="header__profile-img">
+                    <span class="header__profile-pseudo">{{ userContent.username }}</span>
                 </button>
             </router-link>
 
@@ -28,7 +28,7 @@ export default {
     },
     data() {
         return {
-            content: ''
+            userContent: ''
         }
     },
     beforeMount() {
@@ -46,10 +46,10 @@ export default {
             localStorage.setItem('reloaded', '1');
             this.$router.go();;
         }
-        
+
         this.$store.dispatch("user/getUserProfile")
             .then(response => {
-                this.content = response.data
+                this.userContent = response.data
             })
     },
     created() {
@@ -83,6 +83,7 @@ export default {
         &-img {
             width: 40px;
             height: 40px;
+            object-fit: cover;
             border-radius: 15px;
             align-items: center;
             margin: 10px;
@@ -91,11 +92,14 @@ export default {
 
     &__buttons {
         display: flex;
+
+        a {
+            text-decoration: none;
+        }
     }
 
     &__logout {
         width: 30px;
-        padding-bottom: 20px;
     }
 }
 </style>

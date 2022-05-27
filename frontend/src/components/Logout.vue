@@ -30,7 +30,6 @@ export default {
 
     &-icon {
         width: 30px;
-
     }
 }
 </style>
