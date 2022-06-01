@@ -4,7 +4,7 @@
         <img src="../assets/logos/icon-left-font-monochrome-white.svg" alt="Logo Groupomania" class="header__logo">
 
         <div class="header__buttons">
-            <router-link :to="'/profile'">
+            <router-link to='/profile'>
                 <button class="header__profile">
                     <img :src="userContent.profilePic" alt="" class="header__profile-img">
                     <span class="header__profile-pseudo">{{ userContent.username }}</span>
@@ -31,29 +31,12 @@ export default {
             userContent: ''
         }
     },
-    beforeMount() {
-        /* this.$router.go(1); */
-        //TODO : avoid the bug width each time there is a new connection, the mounted method for retrieving user information doesn't work
-    },
-    mounted() {
-        //This method refresh the page 
-        if (localStorage.getItem('reloaded')) {
-            // The page was just reloaded. Clear the value from local storage
-            // so that it will reload the next time this page is visited.
-            localStorage.removeItem('reloaded');
-        } else {
-            // Set a flag so that we know not to reload the page twice.
-            localStorage.setItem('reloaded', '1');
-            this.$router.go();;
-        }
-
+    
+    created() {
         this.$store.dispatch("user/getUserProfile")
             .then(response => {
                 this.userContent = response.data
             })
-    },
-    created() {
-        /* this.$router.go(); */
     }
 }
 </script>

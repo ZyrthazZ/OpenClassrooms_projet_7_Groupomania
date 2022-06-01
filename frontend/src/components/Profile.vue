@@ -18,7 +18,7 @@
             ainsi que votre mot de passe.
         </p>
 
-        <Form @submit="handleUpdateUserProfile" class="profile__form" action="" method="post">
+        <Form @submit="handleUpdateUserProfile" class="profile__form" action="" method="put">
 
             <p class="profile__form-title">Informations du profil</p>
             <p>Adresse email : {{ userContent.email }}</p>
@@ -46,15 +46,17 @@
             <button type="submit" class="profile__form-button">Modifier les informations</button>
 
         </Form>
-
+        <p class="updatePassword__redirect">
+            <router-link :to="'/updatePassword'">Cliquez ici</router-link> pour changer votre mot de passe
+        </p>
     </section>
 </template>
 
 <script>
 import Logout from '../components/Logout.vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
-import UserService from "../services/user.service";
 const user = JSON.parse(localStorage.getItem('user'));
+
 export default {
     name: 'Profile',
 
@@ -73,20 +75,19 @@ export default {
 
     methods: {
         handleUpdateUserProfile(content) {
-            /* this.$store.dispatch("user/updateUserProfile", content)
+            this.$store.dispatch("user/updateUserProfile", content)
                 .then(() => {
                     this.$router.go();
                 }
-                ); */
-            UserService.updateUserProfile(content)
+                );
         }
     },
-    mounted() {
+    created() {
         this.$store.dispatch("user/getUserProfile")
             .then(response => {
                 this.userContent = response.data
             })
-        console.log("userToken" + user.token)
+        console.log("userToken " + user.token)
     },
 
 }

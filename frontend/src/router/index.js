@@ -6,6 +6,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import ProfileView from '../views/ProfileView.vue'
+import UpdatePasswordView from '../views/UpdatePasswordView.vue'
 
 const router = createRouter({
   history: createWebHistory(
@@ -33,6 +34,11 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView
+    },
+    {
+      path: '/updatePassword',
+      name: '/updatePassword',
+      component: UpdatePasswordView
     },
   ]
 })
