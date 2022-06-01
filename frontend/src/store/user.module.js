@@ -2,7 +2,10 @@ import UserService from "../services/user.service";
 
 export const user = {
     namespaced: true,
-
+    /* state: {
+        userData: ''
+    }, */
+    
     actions: {
         getUserProfile() {
             return UserService.getUserProfile()

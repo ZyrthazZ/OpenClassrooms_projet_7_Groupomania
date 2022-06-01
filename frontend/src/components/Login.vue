@@ -1,6 +1,6 @@
 <template>
-    <header class="header">
-        <img src="../assets/logos/icon-left-font-monochrome-white.svg" alt="" class="header__logo">
+    <header class="loginHeader">
+        <img src="../assets/logos/icon-left-font-monochrome-white.svg" alt="" class="loginHeader__logo">
     </header>
 
     <section class="loginSection">
@@ -108,7 +108,7 @@ export default {
 <style lang="scss">
 @import '@/assets/sass/main.scss';
 
-.header {
+.loginHeader {
     display: flex;
     justify-content: space-around;
     margin: 20px 5px 50px 5px;

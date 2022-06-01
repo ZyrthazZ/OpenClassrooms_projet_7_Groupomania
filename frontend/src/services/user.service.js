@@ -1,15 +1,13 @@
 //Import of axios
-import axios from 'axios';
-import authHeader from './auth-header';
+import axios from '../../src/config_axios';
 const API_URL = 'http://localhost:8080/api/users/';
-const user = JSON.parse(localStorage.getItem('user'));
 
 //Create the UserService class which will be called through the vue components
 class UserService {
     getUserProfile() {
-        return axios.get(API_URL + user.userId, {
-                headers: authHeader()
-            })
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        return axios.get(API_URL + user.userId)
             .then(response => {
                 console.log(response)
                 return response
@@ -18,9 +16,12 @@ class UserService {
     }
 
     updateUserProfile() {
-        return axios.put(API_URL + user.userId + "/updateProfile", {
-            headers: authHeader()
-        })
+        return axios.put(API_URL + user.userId + "/updateProfile")
+            .then(response => {
+                console.log(response)
+                return response
+            })
+            .catch()
     }
 
     updateUserPassword() {

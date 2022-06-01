@@ -1,5 +1,5 @@
 //Import of axios
-import axios from 'axios';
+import axios from '../../src/config_axios';
 
 const API_URL = 'http://localhost:8080/api/users/';
 

@@ -1,7 +1,7 @@
 //Imports
 
-var jwt = require('jsonwebtoken');
-var models = require('../models');
+const jwt = require('jsonwebtoken');
+const models = require('../models');
 
 //This middleware tries to secure the requests on the posts
 module.exports = async (req, res, next) => {

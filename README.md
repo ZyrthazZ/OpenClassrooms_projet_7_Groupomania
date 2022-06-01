@@ -6,7 +6,7 @@ This is the 7th and last project of the OpenClassrooms Web Developper formation 
 
 //LAUNCH PROJECT//
 - Frontend : cd frontend -> npm run dev
-- Backend : cd backend -> nodemon server
+- Backend : cd backend -> nodemon server or node server
 
 For the backend, you can use MAMP to host you mysql database. You must install mySQL as well, and configure the port. 
 

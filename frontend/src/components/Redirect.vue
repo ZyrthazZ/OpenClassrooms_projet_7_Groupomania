@@ -11,7 +11,7 @@ export default {
             return this.$store.state.auth.status.loggedIn;
         },
     },
-    created() {
+    beforeCreated() {
         if (!this.loggedIn) {
             this.$router.push("/login");
         }
