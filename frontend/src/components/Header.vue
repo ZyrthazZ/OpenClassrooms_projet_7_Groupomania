@@ -6,8 +6,8 @@
         <div class="header__buttons">
             <router-link to='/profile'>
                 <button class="header__profile">
-                    <img :src="userContent.profilePic" alt="" class="header__profile-img">
-                    <span class="header__profile-pseudo">{{ userContent.username }}</span>
+                    <img :src="this.$store.state.user.userData.profilePic" alt="" class="header__profile-img">
+                    <span class="header__profile-pseudo">{{ this.$store.state.user.userData.username }}</span>
                 </button>
             </router-link>
 
@@ -28,7 +28,7 @@ export default {
     },
     data() {
         return {
-            userContent: ''
+            
         }
     },
     computed: {
@@ -42,10 +42,10 @@ export default {
         }
     },
     mounted() {
-        this.$store.dispatch("user/getUserProfile")
+        /* this.$store.dispatch("user/getUserProfile")
             .then(response => {
                 this.userContent = response.data
-            })
+            }) */
     }
 }
 </script>

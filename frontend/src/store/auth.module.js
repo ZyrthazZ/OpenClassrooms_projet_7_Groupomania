@@ -47,6 +47,10 @@ export const auth = {
             commit
         }) {
             AuthService.logout();
+            // Commit the 'eraseUserData' mutation in the user module
+            commit("user/eraseUserData", null, {
+                root: true
+            });
             // Commit the 'logout' mutation
             commit('logout');
         }, //End of logout function
@@ -87,6 +91,7 @@ export const auth = {
         },
         registerFailure(state) {
             state.status.loggedIn = false;
-        }
+        },
+
     }
 };

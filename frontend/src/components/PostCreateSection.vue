@@ -5,7 +5,7 @@
         <div class="create__post__introduction">
 
             <span class="create__post__introduction-greetings">
-                Bonjour {{ content.username }} !
+                Bonjour {{ this.$store.state.user.userData.username }} !
             </span>
             <br />
             <span class="create__post__introduction-share">
@@ -18,7 +18,7 @@
         <div class="create__post__interface">
 
 
-            <img :src="content.profilePic" alt="" class="create__post__interface-profilepic">
+            <img :src="this.$store.state.user.userData.profilePic" alt="" class="create__post__interface-profilepic">
 
             <form action="" method="post" class="create__post__interface__form">
 
@@ -59,15 +59,15 @@ export default {
     name: 'PostCreateSection',
     data() {
         return {
-            content: ''
+
         }
     },
 
     mounted() {
-        this.$store.dispatch("user/getUserProfile")
+        /* this.$store.dispatch("user/getUserProfile")
             .then(response => {
                 this.content = response.data
-            })
+            }) */
     },
 }
 </script>

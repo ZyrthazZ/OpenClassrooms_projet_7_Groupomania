@@ -10,10 +10,10 @@
 
     <section class="profile">
 
-        <img :src="userContent.profilePic" alt="Photo de profil de l'utilisateur" class="profile__pic">
+        <img :src="this.$store.state.user.userData.profilePic" alt="Photo de profil de l'utilisateur" class="profile__pic">
 
         <p class="profile__introduction">
-            Bienvenue {{ userContent.username }},<br /> sur cette page vous pouvez modifier les informations de votre
+            Bienvenue {{ this.$store.state.user.userData.username }},<br /> sur cette page vous pouvez modifier les informations de votre
             profil
             ainsi que votre mot de passe.
         </p>
@@ -21,21 +21,21 @@
         <Form @submit="handleUpdateUserProfile" enctype="multipart/form-data" action="" method="post" class="profile__form">
 
             <p class="profile__form-title">Informations du profil</p>
-            <p>Adresse email : {{ userContent.email }}</p>
+            <p>Adresse email : {{ this.$store.state.user.userData.email }}</p>
 
             <div class="profile__form-username">
                 <p>Pseudo</p>
-                <Field type="text" name="username" id="username" :placeholder="userContent.username" />
+                <Field type="text" name="username" id="username" :value="this.$store.state.user.userData.username" />
             </div>
 
             <div class="profile__form-bio">
                 <p>Bio</p>
-                <Field type="text" name="bio" id="bio" :placeholder="userContent.bio" />
+                <Field type="text" name="bio" id="bio" :value="this.$store.state.user.userData.bio" />
             </div>
 
             <div class="profile__form-img">
                 <p>Photo de profil</p>
-                <img :src="userContent.profilePic" alt="Photo de profil de l'utilisateur"
+                <img :src="this.$store.state.user.userData.profilePic" alt="Photo de profil de l'utilisateur"
                     class="profile__form-img-profilePic">
 
                 <label for="file"><img src="../assets/icons/file-image-regular.svg" alt=""
@@ -63,7 +63,7 @@ export default {
 
     data() {
         return {
-            userContent: ''
+            
         }
     },
 
@@ -85,10 +85,10 @@ export default {
         }
     },
     created() {
-        this.$store.dispatch("user/getUserProfile")
+        /* this.$store.dispatch("user/getUserProfile")
             .then(response => {
                 this.userContent = response.data
-            })
+            }) */
     },
 
 }

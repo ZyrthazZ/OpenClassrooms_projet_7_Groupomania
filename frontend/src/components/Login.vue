@@ -65,6 +65,7 @@ export default {
         handleLogin(user, error) {
             this.$store.dispatch("auth/login", user, error)
                 .then(() => {
+                    this.$store.dispatch("user/getUserProfile");
                     this.$router.push("/home");
                 })
                 .catch(error => {
