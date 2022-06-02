@@ -9,7 +9,7 @@
             <h3>Connexion</h3>
         </div>
 
-        <Form @submit="handleLogin" action="" method="put" class="loginSection__form">
+        <Form @submit="handleLogin" action="" method="post" class="loginSection__form">
 
             <div class="loginSection__form-input">
 
@@ -62,12 +62,15 @@ export default {
     },
 
     methods: {
-        handleLogin(user) {
-            this.$store.dispatch("auth/login", user)
+        handleLogin(user, error) {
+            this.$store.dispatch("auth/login", user, error)
                 .then(() => {
                     this.$router.push("/home");
-                }
-                );
+                })
+                .catch(error => {
+                    console.log(error)
+                    console.log(error.response.data)
+                });
         },
 
         validateEmail(value) {

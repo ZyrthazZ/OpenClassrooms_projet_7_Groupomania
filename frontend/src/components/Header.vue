@@ -31,8 +31,17 @@ export default {
             userContent: ''
         }
     },
-    
-    created() {
+    computed: {
+        loggedIn() {
+            return this.$store.state.auth.status.loggedIn;
+        },
+    },
+    beforeCreated() {
+        if (!this.loggedIn) {
+            this.$router.push("/login");
+        }
+    },
+    mounted() {
         this.$store.dispatch("user/getUserProfile")
             .then(response => {
                 this.userContent = response.data

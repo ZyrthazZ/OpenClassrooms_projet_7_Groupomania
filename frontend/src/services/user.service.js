@@ -15,8 +15,18 @@ class UserService {
             .catch()
     }
 
-    updateUserProfile() {
-        return axios.put(API_URL + user.userId + "/updateProfile")
+    updateUserProfile(updatedContent) {
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        console.log(updatedContent)
+        return axios.put(API_URL + user.userId + "/updateProfile", {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+                username: updatedContent.username,
+                bio: updatedContent.bio,
+                profilePic: updatedContent.image
+            })
             .then(response => {
                 console.log(response)
                 return response

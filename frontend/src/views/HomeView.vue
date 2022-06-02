@@ -7,10 +7,11 @@ import Redirect from '../components/Redirect.vue'
 </script>
 
 <template>
+    <Redirect />
     <Header />
 
     <PostCreateSection />
-    <Redirect />
+
     <RouterView />
 </template>
 

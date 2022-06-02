@@ -18,7 +18,7 @@
             ainsi que votre mot de passe.
         </p>
 
-        <Form @submit="handleUpdateUserProfile" class="profile__form" action="" method="put">
+        <Form @submit="handleUpdateUserProfile" enctype="multipart/form-data" action="" method="post" class="profile__form">
 
             <p class="profile__form-title">Informations du profil</p>
             <p>Adresse email : {{ userContent.email }}</p>
@@ -40,12 +40,13 @@
 
                 <label for="file"><img src="../assets/icons/file-image-regular.svg" alt=""
                         class="create__post__interface__form-buttons-file-icon"></label>
-                <Field type="file" name="file" id="file" />
+                <Field type="file" name="image" id="image"/>
             </div>
 
             <button type="submit" class="profile__form-button">Modifier les informations</button>
 
         </Form>
+
         <p class="updatePassword__redirect">
             <router-link :to="'/updatePassword'">Cliquez ici</router-link> pour changer votre mot de passe
         </p>
@@ -55,7 +56,7 @@
 <script>
 import Logout from '../components/Logout.vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
-const user = JSON.parse(localStorage.getItem('user'));
+import UserService from "../services/user.service";
 
 export default {
     name: 'Profile',
@@ -74,12 +75,13 @@ export default {
     },
 
     methods: {
-        handleUpdateUserProfile(content) {
-            this.$store.dispatch("user/updateUserProfile", content)
+        /* handleUpdateUserProfile(updatedContent) {
+            this.$store.dispatch("user/updateUserProfile", updatedContent)
                 .then(() => {
-                    this.$router.go();
-                }
-                );
+                });
+        } */
+        handleUpdateUserProfile(content) {
+            UserService.updateUserProfile(content)
         }
     },
     created() {
@@ -87,7 +89,6 @@ export default {
             .then(response => {
                 this.userContent = response.data
             })
-        console.log("userToken " + user.token)
     },
 
 }
@@ -159,9 +160,9 @@ export default {
                 object-fit: cover;
             }
 
-            input {
+            /* input {
                 display: none;
-            }
+            } */
         }
 
         &-button {

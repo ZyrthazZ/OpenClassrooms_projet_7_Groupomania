@@ -2,16 +2,12 @@
 export default {
     name: "Redirect",
 
-    setup() {
-
-    },
-
     computed: {
         loggedIn() {
             return this.$store.state.auth.status.loggedIn;
         },
     },
-    beforeCreated() {
+    mounted() {
         if (!this.loggedIn) {
             this.$router.push("/login");
         }
@@ -21,5 +17,5 @@ export default {
 </script>
 
 <template>
-    
+
 </template>

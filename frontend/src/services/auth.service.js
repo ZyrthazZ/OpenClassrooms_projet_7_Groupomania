@@ -7,6 +7,7 @@ const API_URL = 'http://localhost:8080/api/users/';
 class AuthService {
     //Login function, send the email and password to the URL with post method, then sets the user item found in the localStorage
     login(user) {
+        console.log(user)
         return axios.post(API_URL + 'login', {
                 email: user.email,
                 password: user.password

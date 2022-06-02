@@ -5,7 +5,7 @@ export const user = {
     /* state: {
         userData: ''
     }, */
-    
+
     actions: {
         getUserProfile() {
             return UserService.getUserProfile()
@@ -20,14 +20,7 @@ export const user = {
 
         updateUserProfile(updatedContent) {
             return UserService.updateUserProfile(updatedContent)
-                .then(
-                    updatedContent => {
-                        return Promise.resolve(updatedContent);
-                    },
-                    error => {
-                        return Promise.resolve(error);
-                    }
-                )
+                .then()
         },
     }
 
