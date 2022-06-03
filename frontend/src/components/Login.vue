@@ -30,7 +30,7 @@
             Vous n'avez pas de compte chez Groupomania ? <br />
             Vous pouvez vous <router-link :to="'/register'">inscrire ici !</router-link>
         </p>
-
+        <span v-show="loading">CHARGEMENT</span>
     </section>
 </template>
 
@@ -40,8 +40,10 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 export default {
     name: "Login",
 
-    setup() {
-
+    data() {
+        return {
+            loading: false,
+        }
     },
 
     computed: {
@@ -49,6 +51,7 @@ export default {
             return this.$store.state.auth.status.loggedIn;
         },
     },
+    
     created() {
         if (this.loggedIn) {
             this.$router.push("/home");
@@ -63,10 +66,20 @@ export default {
 
     methods: {
         handleLogin(user, error) {
+            //Set loading to true so the span in v-show can be showed
+            this.loading = true;
+            //Login function in the auth store
             this.$store.dispatch("auth/login", user, error)
                 .then(() => {
-                    this.$store.dispatch("user/getUserProfile");
-                    this.$router.push("/home");
+                    //As a promess in the login function, we call the user data
+                    this.$store.dispatch("user/getUserProfile", error)
+                        .then(() => {
+                            //As a promess in the getUserProfile function, we push the router to /home
+                            this.$router.push("/home")
+                        })
+                        .catch(error => {
+                            console.log(error.response.data)
+                        });
                 })
                 .catch(error => {
                     console.log(error)

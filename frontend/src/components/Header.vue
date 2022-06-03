@@ -28,7 +28,7 @@ export default {
     },
     data() {
         return {
-            
+
         }
     },
     computed: {
@@ -36,16 +36,14 @@ export default {
             return this.$store.state.auth.status.loggedIn;
         },
     },
-    beforeCreated() {
+    created() {
         if (!this.loggedIn) {
             this.$router.push("/login");
         }
+
     },
     mounted() {
-        /* this.$store.dispatch("user/getUserProfile")
-            .then(response => {
-                this.userContent = response.data
-            }) */
+
     }
 }
 </script>

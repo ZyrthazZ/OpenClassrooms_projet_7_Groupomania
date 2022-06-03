@@ -64,10 +64,7 @@ export default {
     },
 
     mounted() {
-        /* this.$store.dispatch("user/getUserProfile")
-            .then(response => {
-                this.content = response.data
-            }) */
+
     },
 }
 </script>

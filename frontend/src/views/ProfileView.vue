@@ -6,8 +6,9 @@ import Redirect from '../components/Redirect.vue'
 </script>
 
 <template>
-    <Profile />
     <Redirect />
+    <Profile />
+
 </template>
 
 

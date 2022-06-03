@@ -10,15 +10,18 @@
 
     <section class="profile">
 
-        <img :src="this.$store.state.user.userData.profilePic" alt="Photo de profil de l'utilisateur" class="profile__pic">
+        <img :src="this.$store.state.user.userData.profilePic" alt="Photo de profil de l'utilisateur"
+            class="profile__pic">
 
         <p class="profile__introduction">
-            Bienvenue {{ this.$store.state.user.userData.username }},<br /> sur cette page vous pouvez modifier les informations de votre
+            Bienvenue {{ this.$store.state.user.userData.username }},<br /> sur cette page vous pouvez modifier les
+            informations de votre
             profil
             ainsi que votre mot de passe.
         </p>
 
-        <Form @submit="handleUpdateUserProfile" enctype="multipart/form-data" action="" method="post" class="profile__form">
+        <Form @submit="handleUpdateUserProfile" enctype="multipart/form-data" action="" method="post"
+            class="profile__form">
 
             <p class="profile__form-title">Informations du profil</p>
             <p>Adresse email : {{ this.$store.state.user.userData.email }}</p>
@@ -40,7 +43,7 @@
 
                 <label for="file"><img src="../assets/icons/file-image-regular.svg" alt=""
                         class="create__post__interface__form-buttons-file-icon"></label>
-                <Field type="file" name="image" id="image"/>
+                <Field type="file" name="image" id="image" />
             </div>
 
             <button type="submit" class="profile__form-button">Modifier les informations</button>
@@ -63,7 +66,7 @@ export default {
 
     data() {
         return {
-            
+
         }
     },
 
@@ -75,20 +78,22 @@ export default {
     },
 
     methods: {
-        /* handleUpdateUserProfile(updatedContent) {
-            this.$store.dispatch("user/updateUserProfile", updatedContent)
-                .then(() => {
-                });
-        } */
         handleUpdateUserProfile(content) {
+
+            // I wish to call the dispate update userprofile directly here so that it calls the update UserProfile service
             UserService.updateUserProfile(content)
+                .then(() => {
+                    //As a promise of updateUserProfile, we call getUserProfile from the store
+                    this.$store.dispatch("user/getUserProfile")
+                        .then(() => {
+                            //As a promise of getUserProfile, we reload the page
+                            this.$router.go()
+                        })
+                })
         }
     },
     created() {
-        /* this.$store.dispatch("user/getUserProfile")
-            .then(response => {
-                this.userContent = response.data
-            }) */
+
     },
 
 }
