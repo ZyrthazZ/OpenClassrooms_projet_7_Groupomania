@@ -20,13 +20,19 @@ export const user = {
                     error => {
                         return Promise.resolve(error);
                     })
-        },
+        }, //End of getUserProfile
 
         updateUserProfile(updatedContent) {
             return UserService.updateUserProfile(updatedContent)
                 .then()
-        },
+        }, //End of updateUserProfile
+
+        updateUserPassword() {
+
+        }, //End of updateUserPassword
     },
+
+
 
     mutations: {
         stockUserData(state, response) {

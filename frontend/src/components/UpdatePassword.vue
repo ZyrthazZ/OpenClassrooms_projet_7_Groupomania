@@ -17,20 +17,20 @@
                 confirmer dans le 3ème champ.
             </p>
         </div>
-
-        <Form @submit="" action="" method="put" class="updatePasswordSection__form">
+<!-- Azertyui79* -->
+        <Form @submit="handleUpdateUserPassword" action="" method="post" class="updatePasswordSection__form">
 
             <div class="updatePasswordSection__form-input">
-                <Field type="password" :rules="validatePassword" placeholder="Mot de Passe actuel" name="password"
+                <Field type="text" :rules="validatePassword" placeholder="Mot de Passe actuel" name="password"
                     id="password" />
                 <ErrorMessage name="password" class="updatePasswordSection__form-errorMessage" />
 
-                <Field type="password" :rules="validateNewPassword" placeholder="Nouveau mot de Passe" name="newPassword"
-                    id="newPassword" />
+                <Field type="text" :rules="validateNewPassword" placeholder="Nouveau mot de Passe"
+                    name="newPassword" id="newPassword" />
                 <ErrorMessage name="newPassword" class="updatePasswordSection__form-errorMessage" />
 
-                <Field type="password" :rules="validateConfirmNewPassword" placeholder="Confirmez le nouveau mot de Passe" name="confirmNewPassword"
-                    id="confirmNewPassword" />
+                <Field type="text" :rules="validateConfirmNewPassword"
+                    placeholder="Confirmez le nouveau mot de Passe" name="confirmNewPassword" id="confirmNewPassword" />
                 <ErrorMessage name="confirmNewPassword" class="updatePasswordSection__form-errorMessage" />
             </div>
 
@@ -43,6 +43,7 @@
 <script>
 import Logout from '../components/Logout.vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
+import UserService from "../services/user.service";
 
 export default {
     name: "UpdatePassword",
@@ -57,6 +58,10 @@ export default {
     },
 
     methods: {
+
+        handleUpdateUserPassword(updatePassword) {
+            UserService.updateUserPassword(updatePassword)
+        },
         validatePassword(value) {
             //If the field is empty
             if (!value) {

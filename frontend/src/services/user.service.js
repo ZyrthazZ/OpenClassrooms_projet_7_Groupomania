@@ -13,7 +13,7 @@ class UserService {
                 return response
             })
             .catch()
-    }
+    } //End of getUserProfile
 
     updateUserProfile(updatedContent) {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -31,19 +31,45 @@ class UserService {
             })
             .then(response => {
                 console.log(response);
-                
+
                 return response
             })
             .catch()
-    }
+    } //End of updateUserProfile
 
-    updateUserPassword() {
+    /* updateUserPassword(updatedPassword) {
+        return axiosService.put(API_URL + "/updatePassword", {
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+                },
+                password: updatedPassword.password,
+                newPassword: updatedPassword.newPassword,
+                confirmNewPassword: updatedPassword.confirmNewPassword
+            })
+            .then(response => {
+                console.log(response)
 
+                return response
+            })
+            .catch()
+    } //End of updateUserPassword */
+    updateUserPassword(updatedPassword) {
+        return axiosService.put("/updatePassword", {
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET'
+                }
+            })
+            .then(response => {
+                console.log(response)
+                return response
+            })
     }
 
     deleteUserProfile() {
 
-    }
+    } //End of deleteUserProfile
 }
 
 //Exports the class
