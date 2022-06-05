@@ -1,5 +1,6 @@
 //Import of axios
 import axiosService from '../../src/config_axios';
+
 const API_URL = 'http://localhost:8080/api/users/';
 
 //Create the UserService class which will be called through the vue components
@@ -37,12 +38,8 @@ class UserService {
             .catch()
     } //End of updateUserProfile
 
-    /* updateUserPassword(updatedPassword) {
-        return axiosService.put(API_URL + "/updatePassword", {
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
-                },
+    updateUserPassword(updatedPassword) {
+        return axiosService.put(API_URL + "updatePassword", {
                 password: updatedPassword.password,
                 newPassword: updatedPassword.newPassword,
                 confirmNewPassword: updatedPassword.confirmNewPassword
@@ -53,19 +50,8 @@ class UserService {
                 return response
             })
             .catch()
-    } //End of updateUserPassword */
-    updateUserPassword(updatedPassword) {
-        return axiosService.put("/updatePassword", {
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'GET'
-                }
-            })
-            .then(response => {
-                console.log(response)
-                return response
-            })
-    }
+    } //End of updateUserPassword 
+
 
     deleteUserProfile() {
 

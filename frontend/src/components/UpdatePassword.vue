@@ -17,7 +17,7 @@
                 confirmer dans le 3ème champ.
             </p>
         </div>
-<!-- Azertyui79* -->
+        <!-- Azertyui79* -->
         <Form @submit="handleUpdateUserPassword" action="" method="post" class="updatePasswordSection__form">
 
             <div class="updatePasswordSection__form-input">
@@ -25,18 +25,20 @@
                     id="password" />
                 <ErrorMessage name="password" class="updatePasswordSection__form-errorMessage" />
 
-                <Field type="text" :rules="validateNewPassword" placeholder="Nouveau mot de Passe"
-                    name="newPassword" id="newPassword" />
+                <Field type="text" :rules="validateNewPassword" placeholder="Nouveau mot de Passe" name="newPassword"
+                    id="newPassword" />
                 <ErrorMessage name="newPassword" class="updatePasswordSection__form-errorMessage" />
 
-                <Field type="text" :rules="validateConfirmNewPassword"
-                    placeholder="Confirmez le nouveau mot de Passe" name="confirmNewPassword" id="confirmNewPassword" />
+                <Field type="text" :rules="validateConfirmNewPassword" placeholder="Confirmez le nouveau mot de Passe"
+                    name="confirmNewPassword" id="confirmNewPassword" />
                 <ErrorMessage name="confirmNewPassword" class="updatePasswordSection__form-errorMessage" />
             </div>
 
             <button type="submit" class="updatePasswordSection__form-button">Mettre à jour le mot de passe</button>
 
         </Form>
+        <span v-show="successMessage">Félicitations ! Votre Mot de Passe a été mis à jour ! Retour à la page
+            profile...</span>
     </section>
 </template>
 
@@ -48,9 +50,13 @@ import UserService from "../services/user.service";
 export default {
     name: "UpdatePassword",
 
-
-
+    data() {
+        return {
+            successMessage: false,
+        }
+    },
     components: {
+
         Logout,
         Form,
         Field,
@@ -58,10 +64,19 @@ export default {
     },
 
     methods: {
-
-        handleUpdateUserPassword(updatePassword) {
-            UserService.updateUserPassword(updatePassword)
+        //Display the updateUserPassword function in the form
+        handleUpdateUserPassword(updatedPassword, error) {
+            UserService.updateUserPassword(updatedPassword, error)
+                /* this.$store.dispatch("user/updateUserPassword", updatedPassword, error) */
+                .then(() => {
+                    this.successMessage = true;
+                    setTimeout(() => { this.$router.push("/profile") }, 2000)
+                })
+                .catch(error => {
+                    console.log(error.response.data)
+                })
         },
+
         validatePassword(value) {
             //If the field is empty
             if (!value) {
@@ -77,6 +92,7 @@ export default {
             //All is good
             return true;
         },
+
         validateNewPassword(value) {
             //If the field is empty
             if (!value) {
@@ -92,6 +108,7 @@ export default {
             //All is good
             return true;
         },
+
         validateConfirmNewPassword(value) {
             //If the field is empty
             if (!value) {

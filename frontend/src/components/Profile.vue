@@ -87,7 +87,7 @@ export default {
                     this.$store.dispatch("user/getUserProfile")
                         .then(() => {
                             //As a promise of getUserProfile, we reload the page
-                            this.$router.go()
+                            this.$router.go();
                         })
                 })
         }

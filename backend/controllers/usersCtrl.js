@@ -81,18 +81,18 @@ module.exports = {
                     res.status(404).json({
                         error: 'Invalid password !'
                     })
-                }
-
-                //The user can log in, we sign the token with the userId and with the isAdmin boolean
-                return res.status(201).json({
-                    userId: searchedUser.id,
-                    token: jwt.sign({
+                } else {
+                    //The user can log in, we sign the token with the userId and with the isAdmin boolean
+                    return res.status(201).json({
                         userId: searchedUser.id,
-                        isAdmin: searchedUser.isAdmin
-                    }, process.env.JWT_SIGN_SECRET, {
-                        expiresIn: '1h'
-                    })
-                });
+                        token: jwt.sign({
+                            userId: searchedUser.id,
+                            isAdmin: searchedUser.isAdmin
+                        }, process.env.JWT_SIGN_SECRET, {
+                            expiresIn: '1h'
+                        })
+                    });
+                }
             }
         } catch (err) {
             console.log('Error in login : ', err)
@@ -171,7 +171,6 @@ module.exports = {
     }, //End of function updateUserProfile
 
     updateUserPassword: async (req, res) => {
-
         //Search the user
         try {
             const searchedUser = await models.User.findOne({
