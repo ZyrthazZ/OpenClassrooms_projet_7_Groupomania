@@ -20,33 +20,24 @@ class UserService {
         const user = JSON.parse(localStorage.getItem('user'));
 
         console.log(updatedContent);
-        let data = new FormData();
-        data.append('username', updatedContent.username);
-        data.append('bio', updatedContent.bio);
-        data.append('image', updatedContent.image);
-        console.log(...data)
-        return axiosService.put(API_URL + user.userId + "/updateProfile", data, {
+        return axiosService.put(API_URL + user.userId + "/updateProfile", updatedContent, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 },
             })
             .then(response => {
                 console.log(response);
-
                 return response
             })
             .catch()
     } //End of updateUserProfile
 
     updateUserPassword(updatedPassword) {
-        return axiosService.put(API_URL + "updatePassword", {
-                password: updatedPassword.password,
-                newPassword: updatedPassword.newPassword,
-                confirmNewPassword: updatedPassword.confirmNewPassword
-            })
+        console.log(updatedPassword)
+
+        return axiosService.put(API_URL + "updatePassword", updatedPassword, )
             .then(response => {
                 console.log(response)
-
                 return response
             })
             .catch()

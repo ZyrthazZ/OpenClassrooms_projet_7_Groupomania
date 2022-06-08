@@ -21,16 +21,16 @@
         <Form @submit="handleUpdateUserPassword" action="" method="post" class="updatePasswordSection__form">
 
             <div class="updatePasswordSection__form-input">
-                <Field type="text" :rules="validatePassword" placeholder="Mot de Passe actuel" name="password"
+                <Field type="password" :rules="validatePassword" placeholder="Mot de Passe actuel" name="password"
                     id="password" />
                 <ErrorMessage name="password" class="updatePasswordSection__form-errorMessage" />
 
-                <Field type="text" :rules="validateNewPassword" placeholder="Nouveau mot de Passe" name="newPassword"
-                    id="newPassword" />
+                <Field type="password" :rules="validateNewPassword" placeholder="Nouveau mot de Passe"
+                    name="newPassword" id="newPassword" />
                 <ErrorMessage name="newPassword" class="updatePasswordSection__form-errorMessage" />
 
-                <Field type="text" :rules="validateConfirmNewPassword" placeholder="Confirmez le nouveau mot de Passe"
-                    name="confirmNewPassword" id="confirmNewPassword" />
+                <Field type="password" :rules="validateConfirmNewPassword"
+                    placeholder="Confirmez le nouveau mot de Passe" name="confirmNewPassword" id="confirmNewPassword" />
                 <ErrorMessage name="confirmNewPassword" class="updatePasswordSection__form-errorMessage" />
             </div>
 
@@ -45,7 +45,9 @@
 <script>
 import Logout from '../components/Logout.vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
-import UserService from "../services/user.service";
+
+//Regex for the passwords, check if the password is at least 8 caracters long, if it contains an uppercase, at least 2 digits and 1 special caracter
+const regexPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/
 
 export default {
     name: "UpdatePassword",
@@ -55,8 +57,8 @@ export default {
             successMessage: false,
         }
     },
-    components: {
 
+    components: {
         Logout,
         Form,
         Field,
@@ -66,8 +68,7 @@ export default {
     methods: {
         //Display the updateUserPassword function in the form
         handleUpdateUserPassword(updatedPassword, error) {
-            UserService.updateUserPassword(updatedPassword, error)
-                /* this.$store.dispatch("user/updateUserPassword", updatedPassword, error) */
+            return this.$store.dispatch("user/updateUserPassword", updatedPassword, error)
                 .then(() => {
                     this.successMessage = true;
                     setTimeout(() => { this.$router.push("/profile") }, 2000)
@@ -77,6 +78,7 @@ export default {
                 })
         },
 
+        //Checks if the actual password fits the rules
         validatePassword(value) {
             //If the field is empty
             if (!value) {
@@ -84,7 +86,6 @@ export default {
             }
 
             //If the field is not matching the password security
-            const regexPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/
             if (!regexPassword.test(value)) {
                 return "Votre mot de passe doit contenir au min 8 caractères, avoir 1 majuscule, 2 chiffres et 1 caractère spécial"
             }
@@ -93,6 +94,7 @@ export default {
             return true;
         },
 
+        //Checks if the new password fits the rules
         validateNewPassword(value) {
             //If the field is empty
             if (!value) {
@@ -100,7 +102,6 @@ export default {
             }
 
             //If the field is not matching the password security
-            const regexPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/
             if (!regexPassword.test(value)) {
                 return "Votre mot de passe doit contenir au min 8 caractères, avoir 1 majuscule, 2 chiffres et 1 caractère spécial"
             }
@@ -109,6 +110,7 @@ export default {
             return true;
         },
 
+        //Check if the confirmNewPassword fits the rules
         validateConfirmNewPassword(value) {
             //If the field is empty
             if (!value) {
@@ -116,7 +118,6 @@ export default {
             }
 
             //If the field is not matching the password security
-            const regexPassword = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/
             if (!regexPassword.test(value)) {
                 return "Votre mot de passe doit contenir au min 8 caractères, avoir 1 majuscule, 2 chiffres et 1 caractère spécial"
             }

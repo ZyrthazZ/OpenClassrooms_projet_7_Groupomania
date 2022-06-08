@@ -5,7 +5,7 @@
         <div class="create__post__introduction">
 
             <span class="create__post__introduction-greetings">
-                Bonjour {{ this.$store.state.user.userData.username }} !
+                Bonjour {{ user.userData.username }} !
             </span>
             <br />
             <span class="create__post__introduction-share">
@@ -18,7 +18,7 @@
         <div class="create__post__interface">
 
 
-            <img :src="this.$store.state.user.userData.profilePic" alt="" class="create__post__interface-profilepic">
+            <img :src="user.userData.profilePic" alt="" class="create__post__interface-profilepic">
 
             <form action="" method="post" class="create__post__interface__form">
 
@@ -55,17 +55,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     name: 'PostCreateSection',
-    data() {
-        return {
 
-        }
-    },
-
-    mounted() {
-
-    },
+    computed: {
+        ...mapState(['user']),
+    }
 }
 </script>
 

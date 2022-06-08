@@ -6,8 +6,8 @@
         <div class="header__buttons">
             <router-link to='/profile'>
                 <button class="header__profile">
-                    <img :src="this.$store.state.user.userData.profilePic" alt="" class="header__profile-img">
-                    <span class="header__profile-pseudo">{{ this.$store.state.user.userData.username }}</span>
+                    <img :src="user.userData.profilePic" alt="" class="header__profile-img">
+                    <span class="header__profile-pseudo">{{ user.userData.username }}</span>
                 </button>
             </router-link>
 
@@ -19,32 +19,36 @@
 
 
 <script>
+import { mapState } from 'vuex';
 import Logout from '../components/Logout.vue';
 
 export default {
     name: 'Header',
+
     components: {
         Logout
     },
+
     data() {
         return {
 
         }
     },
+
     computed: {
+        ...mapState(['user']),
+
         loggedIn() {
             return this.$store.state.auth.status.loggedIn;
         },
     },
+
     created() {
         if (!this.loggedIn) {
             this.$router.push("/login");
         }
 
     },
-    mounted() {
-
-    }
 }
 </script>
 

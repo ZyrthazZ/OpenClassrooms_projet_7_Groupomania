@@ -10,11 +10,10 @@
 
     <section class="profile">
 
-        <img :src="this.$store.state.user.userData.profilePic" alt="Photo de profil de l'utilisateur"
-            class="profile__pic">
+        <img :src="user.userData.profilePic" alt="Photo de profil de l'utilisateur" class="profile__pic">
 
         <p class="profile__introduction">
-            Bienvenue {{ this.$store.state.user.userData.username }},<br /> sur cette page vous pouvez modifier les
+            Bienvenue {{ user.userData.username }},<br /> sur cette page vous pouvez modifier les
             informations de votre
             profil
             ainsi que votre mot de passe.
@@ -24,26 +23,27 @@
             class="profile__form">
 
             <p class="profile__form-title">Informations du profil</p>
-            <p>Adresse email : {{ this.$store.state.user.userData.email }}</p>
+            <p>Adresse email : {{ user.userData.email }}</p>
 
+            <p>Pseudo</p>
             <div class="profile__form-username">
-                <p>Pseudo</p>
-                <Field type="text" name="username" id="username" :value="this.$store.state.user.userData.username" />
+                <Field type="text" name="username" id="username" :value="user.userData.username" />
             </div>
 
+            <p>Bio</p>
             <div class="profile__form-bio">
-                <p>Bio</p>
-                <Field type="text" name="bio" id="bio" :value="this.$store.state.user.userData.bio" />
+                <Field type="text" name="bio" id="bio" :value="user.userData.bio" />
             </div>
 
+            <p>Photo de profil</p>
             <div class="profile__form-img">
-                <p>Photo de profil</p>
-                <img :src="this.$store.state.user.userData.profilePic" alt="Photo de profil de l'utilisateur"
+                <img :src="user.userData.profilePic" alt="Photo de profil de l'utilisateur"
                     class="profile__form-img-profilePic">
 
-                <label for="file"><img src="../assets/icons/file-image-regular.svg" alt=""
-                        class="create__post__interface__form-buttons-file-icon"></label>
+                <label for="image"><img src="../assets/icons/file-image-regular.svg" alt=""
+                        class="profile__form-img-icon"></label>
                 <Field type="file" name="image" id="image" />
+
             </div>
 
             <button type="submit" class="profile__form-button">Modifier les informations</button>
@@ -59,7 +59,7 @@
 <script>
 import Logout from '../components/Logout.vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
-import UserService from "../services/user.service";
+import { mapState } from 'vuex'
 
 export default {
     name: 'Profile',
@@ -77,25 +77,45 @@ export default {
         ErrorMessage
     },
 
+    computed: {
+        ...mapState(['user'])
+    },
+
     methods: {
         handleUpdateUserProfile(content) {
+            //Shows the content the user wants to modify
+            console.log("content to send ", content)
 
-            // I wish to call the dispate update userprofile directly here so that it calls the update UserProfile service
-            UserService.updateUserProfile(content)
-                .then(() => {
-                    //As a promise of updateUserProfile, we call getUserProfile from the store
-                    this.$store.dispatch("user/getUserProfile")
-                        .then(() => {
-                            //As a promise of getUserProfile, we reload the page
-                            this.$router.go();
-                        })
-                })
+            //Defines what the content object contains
+            let { username, bio, ...profilePic } = content;
+
+            //If the user changes the profilePic, then we use it in content
+            if (profilePic.image) {
+                //Defines the data object containing the username, the bio and the image
+                let data = {
+                    username: username,
+                    bio: bio,
+                    image: profilePic.image[0]
+                }
+                console.log(data);
+
+                //Passes the data object to the updateUserProfile in the user module store
+                return this.$store.dispatch("user/updateUserProfile", data)
+
+                //If the user doesn't change the profilePic, then we don't pass the image in the content
+            } else {
+                //Defines the data object containing the username and the bio
+                let data = {
+                    username: username,
+                    bio: bio
+                }
+                console.log(data);
+
+                //Passes the data object to the updateUserProfile in the user module store
+                return this.$store.dispatch("user/updateUserProfile", data)
+            }
         }
     },
-    created() {
-
-    },
-
 }
 </script>
 
@@ -159,15 +179,23 @@ export default {
         }
 
         &-img {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+
             &-profilePic {
                 width: 60px;
                 height: 60px;
                 object-fit: cover;
             }
 
-            /* input {
+            &-icon {
+                width: 50px;
+            }
+
+            input {
                 display: none;
-            } */
+            }
         }
 
         &-button {

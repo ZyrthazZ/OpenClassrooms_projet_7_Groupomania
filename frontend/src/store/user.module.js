@@ -24,13 +24,17 @@ export const user = {
         }, //End of getUserProfile
 
         //Function calling the updateUserProfile from UserService
-        updateUserProfile(updatedContent) {
+        updateUserProfile({
+            dispatch
+        }, updatedContent) {
             return UserService.updateUserProfile(updatedContent)
-                .then()
+                .then(() => {
+                    dispatch('getUserProfile')
+                })
         }, //End of updateUserProfile
 
         //Function calling the updateUserPassword from UserService
-        updateUserPassword(updatedPassword) {
+        updateUserPassword({}, updatedPassword) {
             return UserService.updateUserPassword(updatedPassword)
                 .then(response => {
                         return Promise.resolve(response);
@@ -41,12 +45,10 @@ export const user = {
         }, //End of updateUserPassword
 
         //Function calling the deleteUserProfile from UserService
-        deleteUserProfile() {
+        deleteUserProfile({}, ) {
 
         },
     },
-
-
 
 
     mutations: {
