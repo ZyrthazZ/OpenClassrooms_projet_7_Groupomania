@@ -40,7 +40,7 @@ module.exports = {
                     username: req.body.username,
                     password: encryptedPassword,
                     bio: req.body.bio,
-                    profilePic: 'http://localhost:8080/images/profils/default_profile_pic.jpg',
+                    profilePic: 'http://localhost:8080/images/default_profile_pic.jpg',
                     isAdmin: false
                 })
                 return res.status(201).json({
@@ -152,7 +152,7 @@ module.exports = {
                 //If req.body.bio is filled, replace the bio in the searchedUser object
                 bio: (req.body.bio ? req.body.bio : searchedUser.bio),
                 //If req.body.profilePic is filled, replace it with req.file.filename, if not keep the searchedUser.profilePic
-                profilePic: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : searchedUser.profilePic)
+                profilePic: (req.file ? `${req.protocol}://${req.get('host')}/images/profils/${req.file.filename}` : searchedUser.profilePic)
             })
 
             if (!updatedUserProfile) {

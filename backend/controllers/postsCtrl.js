@@ -25,7 +25,7 @@ module.exports = {
             const createdPost = await models.Post.create({
                 title: req.body.title,
                 content: req.body.content,
-                imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+                imageUrl: `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}`,
                 UserId: searchedUser.id
             })
             //Cannot create post
@@ -142,7 +142,7 @@ module.exports = {
                 //If req.body.content is filled, replace the content in the searchedPost object
                 content: (req.body.content ? req.body.content : searchedPost.content),
                 //If there is a file, replace it with req.file.filename, if not keep the searchedPost.imageUrl
-                imageUrl: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : searchedUser.imageUrl)
+                imageUrl: (req.file ? `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}` : searchedUser.imageUrl)
             })
             //Cannot update post
             if (!postUpdated) {

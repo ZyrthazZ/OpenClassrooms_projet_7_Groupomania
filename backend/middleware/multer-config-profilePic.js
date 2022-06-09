@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     //Necessary argument for diskStorage : destination to indicate where to register the files
     destination: (req, file, callback) => {
         //Null argument in callback meaning there are no errors and 'images' to specify the folder for the files
-        callback(null, 'images')
+        callback(null, 'images/profils')
     },
     //Necessary argument for diskStorage : filename to specify how the file will be named
     filename: (req, file, callback) => {

@@ -1,7 +1,7 @@
 //Imports
 const express = require("express");
 const router = express.Router();
-const multer = require("../middleware/multer-config");
+const multerPosts = require("../middleware/multer-config-profilePic");
 const postsCtrl = require("../controllers/postsCtrl");
 const postValidator = require("../middleware/postValidator");
 const auth_post = require('../middleware/auth_post');
@@ -9,11 +9,11 @@ const auth_user = require('../middleware/auth_user');
 
 //Routes 
 
-router.post('/posts/new/', multer, postValidator, auth_user,  postsCtrl.createPost);
-router.get('/posts/:postId', multer, auth_user, postsCtrl.listOnePost);
-router.get('/posts/', multer, auth_user, postsCtrl.listAllPosts);
-router.put('/posts/:postId/updatePost', multer, auth_post, postsCtrl.updatePost);
-router.delete('/posts/:postId/deletePost', multer, auth_post, postsCtrl.deletePost);
+router.post('/posts/new/', multerPosts, postValidator, auth_user, postsCtrl.createPost);
+router.get('/posts/:postId', multerPosts, auth_user, postsCtrl.listOnePost);
+router.get('/posts/', multerPosts, auth_user, postsCtrl.listAllPosts);
+router.put('/posts/:postId/updatePost', multerPosts, auth_post, postsCtrl.updatePost);
+router.delete('/posts/:postId/deletePost', multerPosts, auth_post, postsCtrl.deletePost);
 
 //Exports
 
