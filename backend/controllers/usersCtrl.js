@@ -85,6 +85,8 @@ module.exports = {
                     //The user can log in, we sign the token with the userId and with the isAdmin boolean
                     return res.status(201).json({
                         userId: searchedUser.id,
+                        //Add isAdmin object to be sent to the frontend
+                        isAdmin: searchedUser.isAdmin,
                         token: jwt.sign({
                             userId: searchedUser.id,
                             isAdmin: searchedUser.isAdmin
@@ -300,67 +302,73 @@ module.exports = {
                 res.status(200).json({
                     message: 'user has been deleted !'
                 })
-            }
-            console.log("isNotAdmin")
-            //Check user with ancient password
-            const checkPassword = await bcrypt.compare(req.body.password, searchedUser.password)
-            //Wrong password
-            if (!checkPassword) {
-                return res.status(404).json({
-                    error: 'wrong password !'
-                })
-            }
-            //Delete likes from the user in the Like table
-            const deleteLikesFromUser = models.Like.destroy({
-                where: {
-                    userId: req.params.userId
+            } else {
+                console.log("isNotAdmin")
+                console.log(req.body)
+                console.log(searchedUser.password)
+                //Check user with ancient password
+                const checkPassword = await bcrypt.compare(req.body.password, searchedUser.password)
+
+                console.log(checkPassword)
+                //Wrong password
+                if (!checkPassword) {
+                    return res.status(404).json({
+                        error: 'wrong password !'
+                    })
                 }
-            })
-            if (!deleteLikesFromUser) {
-                return res.status(404).json({
-                    error: 'cannot delete Like'
+                //Delete likes from the user in the Like table
+                const deleteLikesFromUser = models.Like.destroy({
+                    where: {
+                        userId: req.params.userId
+                    }
                 })
-            }
-            console.log("likes deleted from the Like table")
-            //Delete comments from the user in the comment table
-            const deleteCommentsFromUser = models.Comment.destroy({
-                where: {
-                    userId: req.params.userId
+                if (!deleteLikesFromUser) {
+                    return res.status(404).json({
+                        error: 'cannot delete Like'
+                    })
                 }
-            })
-            if (!deleteCommentsFromUser) {
-                return res.status(404).json({
-                    error: 'cannot delete Comment'
+                console.log("likes deleted from the Like table")
+                //Delete comments from the user in the comment table
+                const deleteCommentsFromUser = models.Comment.destroy({
+                    where: {
+                        userId: req.params.userId
+                    }
                 })
-            }
-            console.log("comments deleted from the Comment table")
-            //Delete posts from the user in the post table
-            const deletePostsFromUser = models.Post.destroy({
-                where: {
-                    userId: req.params.userId
+                if (!deleteCommentsFromUser) {
+                    return res.status(404).json({
+                        error: 'cannot delete Comment'
+                    })
                 }
-            })
-            if (!deletePostsFromUser) {
-                return res.status(404).json({
-                    error: 'cannot delete Post'
+                console.log("comments deleted from the Comment table")
+                //Delete posts from the user in the post table
+                const deletePostsFromUser = models.Post.destroy({
+                    where: {
+                        userId: req.params.userId
+                    }
                 })
-            }
-            console.log("posts deleted from the Post table")
-            //Delete user from the user table
-            const deleteUser = models.User.destroy({
-                where: {
-                    id: req.params.userId
+                if (!deletePostsFromUser) {
+                    return res.status(404).json({
+                        error: 'cannot delete Post'
+                    })
                 }
-            })
-            if (!deleteUser) {
-                return res.status(404).json({
-                    error: 'cannot delete User'
+                console.log("posts deleted from the Post table")
+                //Delete user from the user table
+                const deleteUser = models.User.destroy({
+                    where: {
+                        id: req.params.userId
+                    }
+                })
+                if (!deleteUser) {
+                    return res.status(404).json({
+                        error: 'cannot delete User'
+                    })
+                }
+                console.log("user deleted from the user table")
+                return res.status(200).json({
+                    message: 'user has been deleted !'
                 })
             }
-            console.log("user deleted from the user table")
-            return res.status(200).json({
-                message: 'user has been deleted !'
-            })
+
 
         } catch (err) {
             console.log('Error in deleteUser : ', err)

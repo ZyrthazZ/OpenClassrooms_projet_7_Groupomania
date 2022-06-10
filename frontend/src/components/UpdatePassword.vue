@@ -21,16 +21,23 @@
         <Form @submit="handleUpdateUserPassword" action="" method="post" class="updatePasswordSection__form">
 
             <div class="updatePasswordSection__form-input">
-                <Field type="password" :rules="validatePassword" placeholder="Mot de Passe actuel" name="password"
-                    id="password" />
+                <div>
+                    <Field type="password" :rules="validatePassword" placeholder="Mot de Passe actuel" name="password"
+                        id="password" />
+                </div>
                 <ErrorMessage name="password" class="updatePasswordSection__form-errorMessage" />
 
-                <Field type="password" :rules="validateNewPassword" placeholder="Nouveau mot de Passe"
-                    name="newPassword" id="newPassword" />
+                <div>
+                    <Field type="password" :rules="validateNewPassword" placeholder="Nouveau mot de Passe"
+                        name="newPassword" id="newPassword" />
+                </div>
                 <ErrorMessage name="newPassword" class="updatePasswordSection__form-errorMessage" />
 
-                <Field type="password" :rules="validateConfirmNewPassword"
-                    placeholder="Confirmez le nouveau mot de Passe" name="confirmNewPassword" id="confirmNewPassword" />
+                <div>
+                    <Field type="password" :rules="validateConfirmNewPassword"
+                        placeholder="Confirmez le nouveau mot de Passe" name="confirmNewPassword"
+                        id="confirmNewPassword" />
+                </div>
                 <ErrorMessage name="confirmNewPassword" class="updatePasswordSection__form-errorMessage" />
             </div>
 

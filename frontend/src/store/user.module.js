@@ -45,8 +45,14 @@ export const user = {
         }, //End of updateUserPassword
 
         //Function calling the deleteUserProfile from UserService
-        deleteUserProfile({}, ) {
-
+        deleteUserProfile({}, password) {
+            return UserService.deleteUserProfile(password)
+                .then(response => {
+                        return Promise.resolve(response);
+                    },
+                    error => {
+                        return Promise.reject(error)
+                    })
         },
     },
 

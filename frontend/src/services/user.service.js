@@ -44,9 +44,22 @@ class UserService {
     } //End of updateUserPassword 
 
 
-    deleteUserProfile() {
 
-    } //End of deleteUserProfile
+    deleteUserProfile(content) {
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        return axiosService.delete(API_URL + user.userId + '/deleteProfile', {
+                data: {
+                    password: content.password
+                }
+            })
+            .then(response => {
+                console.log(response)
+                return response
+            })
+            .catch()
+        //End of deleteUserProfile
+    }
 }
 
 //Exports the class

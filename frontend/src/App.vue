@@ -1,9 +1,20 @@
-<script setup>
+<script>
 import { RouterLink, RouterView } from 'vue-router'
 
+export default {
+  setup() {
+
+  },
+
+  components: {
+
+  },
+
+}
 </script>
 
 <template>
+
 
 
   <RouterView />

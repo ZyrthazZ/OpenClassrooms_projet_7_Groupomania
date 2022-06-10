@@ -26,7 +26,8 @@ module.exports = async (req, res, next) => {
 
         if (isAdmin) {
             console.log("isAdmin")
-            req.isAdmin
+            req.isAdmin = isAdmin
+            console.log(req.isAdmin)
             next();
         } else {
             console.log("isNotAdmin")

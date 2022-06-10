@@ -37,6 +37,7 @@
             Vous avez déjà un compte chez Groupomania ? <br />
             <router-link :to="'/login'">Cliquez ici</router-link> pour vous connecter !
         </p>
+        <span v-show="loading">CHARGEMENT</span>
 
     </section>
 </template>
@@ -48,8 +49,10 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 export default {
     name: "Register",
 
-    setup() {
-
+    data() {
+        return {
+            loading: false,
+        }
     },
 
     computed: {
@@ -70,21 +73,39 @@ export default {
     },
 
     methods: {
-        handleLogin(user) {
-            this.$store.dispatch("auth/login", user)
-                .then(() => {
-                    this.$router.push("/home");
-                }
-                );
-        },
-
-        handleRegister(user) {
-            this.$store.dispatch("auth/register", user)
+        //Display the register function in the store in the form
+        handleRegister(user, error) {
+            this.$store.dispatch("auth/register", user, error)
                 .then(() => {
                     this.handleLogin(user);
-                }
-                );
-        },
+                })
+                .catch(error => {
+                    console.log(error.response.data)
+                });
+        }, //End of handleRegister
+
+        // This handleLogin function is used in the handleRegister function above
+        handleLogin(user, error) {
+            //Set loading to true so the span in v-show can be showed
+            this.loading = true;
+            //Login function in the auth store
+            this.$store.dispatch("auth/login", user, error)
+                .then(() => {
+                    //As a promess in the login function, we call the user data
+                    this.$store.dispatch("user/getUserProfile", error)
+                        .then(() => {
+                            //As a promess in the getUserProfile function, we push the router to /home
+                            this.$router.push("/home")
+                        })
+                        .catch(error => {
+                            console.log(error.response.data)
+                        });
+                })
+                .catch(error => {
+                    console.log(error)
+                    console.log(error.response.data)
+                });
+        }, //End of handleLogin
 
         validateEmail(value) {
             //If the field is empty

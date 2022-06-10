@@ -16,7 +16,7 @@
             Bienvenue {{ user.userData.username }},<br /> sur cette page vous pouvez modifier les
             informations de votre
             profil
-            ainsi que votre mot de passe.
+            ainsi que votre mot de passe. Vous pouvez également supprimer votre compte.
         </p>
 
         <Form @submit="handleUpdateUserProfile" enctype="multipart/form-data" action="" method="post"
@@ -54,24 +54,45 @@
             <router-link :to="'/updatePassword'">Cliquez ici</router-link> pour changer votre mot de passe
         </p>
     </section>
+
+    <!-- Here we deal with the DeleteProfilePopup -->
+
+    <!-- On the click of this button, the TogglePopup function is triggered, 
+    which passes the buttonTrigger of popupTriggers to true, which shows the DeleteProfilePopup content -->
+    <button @click="() => TogglePopup('buttonTrigger')" class="deleteProfileButton">Supprimer le profil</button>
+
+    <DeleteProfilePopup v-if="popupTriggers.buttonTrigger" :TogglePopup="() => TogglePopup('buttonTrigger')" />
 </template>
 
 <script>
 import Logout from '../components/Logout.vue';
+import DeleteProfilePopup from './DeleteProfilePopup.vue'
+
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { mapState } from 'vuex'
+import { ref } from 'vue';
 
 export default {
     name: 'Profile',
 
-    data() {
-        return {
+    setup() {
+        const popupTriggers = ref({
+            buttonTrigger: false
+        });
 
+        const TogglePopup = (trigger) => {
+            popupTriggers.value[trigger] = !popupTriggers.value[trigger]
+        }
+
+        return {
+            popupTriggers,
+            TogglePopup
         }
     },
 
     components: {
         Logout,
+        DeleteProfilePopup,
         Form,
         Field,
         ErrorMessage
@@ -206,5 +227,17 @@ export default {
             background-color: $primary-color;
         }
     }
+
+}
+
+.deleteProfileButton {
+    display: flex;
+    margin: 20px auto;
+
+    margin-top: 20px;
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    background-color: $primary-color;
 }
 </style>

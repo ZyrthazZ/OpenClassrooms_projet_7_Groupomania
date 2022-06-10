@@ -12,13 +12,15 @@
         <Form @submit="handleLogin" action="" method="post" class="loginSection__form">
 
             <div class="loginSection__form-input">
-
-                <Field type="email" :rules="validateEmail" placeholder="Adresse email" name="email" id="email" />
+                <div>
+                    <Field type="email" :rules="validateEmail" placeholder="Adresse email" name="email" id="email" />
+                </div>
                 <ErrorMessage name="email" class="loginSection__form-errorMessage" />
 
-
-                <Field type="password" :rules="validatePassword" placeholder="Mot de Passe" name="password"
-                    id="password" />
+                <div>
+                    <Field type="password" :rules="validatePassword" placeholder="Mot de Passe" name="password"
+                        id="password" />
+                </div>
                 <ErrorMessage name="password" class="loginSection__form-errorMessage" />
             </div>
 
@@ -51,7 +53,7 @@ export default {
             return this.$store.state.auth.status.loggedIn;
         },
     },
-    
+
     created() {
         if (this.loggedIn) {
             this.$router.push("/home");
@@ -85,7 +87,7 @@ export default {
                     console.log(error)
                     console.log(error.response.data)
                 });
-        },
+        }, //End of handleLogin
 
         validateEmail(value) {
             //If the field is empty
