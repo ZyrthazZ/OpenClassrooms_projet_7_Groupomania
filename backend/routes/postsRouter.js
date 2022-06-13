@@ -1,7 +1,7 @@
 //Imports
 const express = require("express");
 const router = express.Router();
-const multerPosts = require("../middleware/multer-config-profilePic");
+const multerPosts = require("../middleware/multer-config-posts");
 const postsCtrl = require("../controllers/postsCtrl");
 const postValidator = require("../middleware/postValidator");
 const auth_post = require('../middleware/auth_post');

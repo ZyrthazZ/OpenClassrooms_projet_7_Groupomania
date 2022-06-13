@@ -1,6 +1,5 @@
 // Imports
-var models = require('../models');
-var asyncLib = require('async');
+const models = require('../models');
 const {
     post
 } = require('../routes/postsRouter');
@@ -26,7 +25,10 @@ module.exports = {
                 title: req.body.title,
                 content: req.body.content,
                 imageUrl: (req.file ? `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}` : ''),
-                UserId: searchedUser.id
+                UserId: req.userId,
+                username: searchedUser.username,
+                bio: searchedUser.bio,
+                profilePic: searchedUser.profilePic
             })
             //Cannot create post
             if (!createdPost) {
@@ -53,24 +55,33 @@ module.exports = {
                 res.status(404).json({
                     error: "post not found"
                 })
-
             }
+
+            const searchedUser = await models.User.findByPk(searchedPost.userId)
+            if (!searchedUser) {
+                res.status(404).json({
+                    error: "user not found"
+                })
+            }
+
             const searchedComments = await models.Comment.findAll({
                 where: {
                     postId: postId
                 }
             })
+
             if (!searchedComments) {
                 res.status(404).json({
                     error: 'comments not found !'
                 })
             }
 
-            if (searchedPost && searchedComments) {
+            if (searchedPost && searchedComments && searchedUser) {
                 res.status(200).json({
-                    postAndComments: {
+                    postAndCommentsAndUser: {
                         searchedPost,
-                        searchedComments
+                        searchedComments,
+                        searchedUser
                     }
                 })
             }
@@ -96,13 +107,13 @@ module.exports = {
 
         try {
             const payload = {
-                order: [(order != null) ? order.split(':') : ['title', 'ASC']],
+                order: [(order != null) ? order.split(':') : ['id', 'DESC']],
                 attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                 limit: (!isNaN(limit)) ? limit : null,
                 offset: (!isNaN(offset)) ? offset : null,
                 /* include: [{
                     model: models.User,
-                    attributes: ['username'] //add profilePic attribute ? 
+                    //add profilePic attribute ? 
                 }] */
             }
             //Search for the users
@@ -110,15 +121,10 @@ module.exports = {
                 attributes: ['id', 'username', 'bio', 'profilePic'],
             })
             //Search for the posts 
-            const allPosts = await models.Post.findAll({
-                payload
-            })
+            const allPosts = await models.Post.findAll(payload)
             if (allPosts) {
                 res.status(200).json({
-                    usersAndPosts: {
-                        searchedUsers,
-                        allPosts
-                    }
+                    allPosts
                 });
             } else {
                 res.status(404).json({

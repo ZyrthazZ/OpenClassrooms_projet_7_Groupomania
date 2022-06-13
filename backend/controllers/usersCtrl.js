@@ -111,7 +111,10 @@ module.exports = {
                 attributes: ['id', 'email', 'username', 'bio', 'profilePic'],
                 where: {
                     id: req.params.userId
-                }
+                },
+                include: [{
+                    model: models.Post
+                }]
             })
 
             //User not found

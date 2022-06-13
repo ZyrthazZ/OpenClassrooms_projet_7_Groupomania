@@ -28,6 +28,18 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
+      username: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      bio: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      profilePic: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
       likes: {
         allowNull: false,
         defaultValue: 0,
