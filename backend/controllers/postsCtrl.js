@@ -25,7 +25,7 @@ module.exports = {
             const createdPost = await models.Post.create({
                 title: req.body.title,
                 content: req.body.content,
-                imageUrl: `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}`,
+                imageUrl: (req.file ? `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}` : ''),
                 UserId: searchedUser.id
             })
             //Cannot create post
@@ -100,15 +100,26 @@ module.exports = {
                 attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                 limit: (!isNaN(limit)) ? limit : null,
                 offset: (!isNaN(offset)) ? offset : null,
-                include: [{
+                /* include: [{
                     model: models.User,
-                    attributes: ['username']
-                }]
+                    attributes: ['username'] //add profilePic attribute ? 
+                }] */
             }
-
-            const allPosts = await models.Post.findAll(payload)
+            //Search for the users
+            const searchedUsers = await models.User.findAll({
+                attributes: ['id', 'username', 'bio', 'profilePic'],
+            })
+            //Search for the posts 
+            const allPosts = await models.Post.findAll({
+                payload
+            })
             if (allPosts) {
-                res.status(200).json(allPosts);
+                res.status(200).json({
+                    usersAndPosts: {
+                        searchedUsers,
+                        allPosts
+                    }
+                });
             } else {
                 res.status(404).json({
                     "error": "no posts found"
@@ -117,7 +128,7 @@ module.exports = {
         } catch (err) {
             console.log('Erreur in listAllPosts : ', err)
             res.status(500).json({
-                "error": "no posts found"
+                "error": "couldn't search for posts"
             });
         }
     }, //End of listPosts
@@ -142,7 +153,7 @@ module.exports = {
                 //If req.body.content is filled, replace the content in the searchedPost object
                 content: (req.body.content ? req.body.content : searchedPost.content),
                 //If there is a file, replace it with req.file.filename, if not keep the searchedPost.imageUrl
-                imageUrl: (req.file ? `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}` : searchedUser.imageUrl)
+                imageUrl: (req.file ? `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}` : searchedPost.imageUrl)
             })
             //Cannot update post
             if (!postUpdated) {

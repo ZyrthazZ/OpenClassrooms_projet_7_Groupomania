@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
       //Met en place la relation "m to m" (many to many) pour une relation entre la table users et posts *
-      //en passant par la table de jonction Likes
+      //en passant par la table de jonction Comments
       models.User.belongsToMany(models.Post, {
         through: models.Comment,
         foreignKey: 'userId',
