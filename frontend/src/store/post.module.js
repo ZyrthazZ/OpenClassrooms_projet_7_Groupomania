@@ -4,7 +4,7 @@ export const post = {
     namespaced: true,
     //Here is the state, which contains an empty object postsData, which will be filled with the data we get from the API
     state: {
-        postData: ''
+        postData: ['']
     },
 
     actions: {

@@ -7,16 +7,6 @@
                 Non
             </button>
 
-            <!-- <Form @submit="handleDeleteUserProfile" action="" method="" class="popup-inner__form">
-                <p>Veuillez vérifier votre mot de passe pour sécuriser la suppression de votre compte</p>
-                <Field type="text" placeholder="Mot de Passe" name="password" id="password" />
-                <ErrorMessage name="password" class="popup-inner__form-errorMessage" />
-                <div>
-                    <button type="submit" class="popup-inner__form-confirmButton" @click="">
-                        Confirmer la suppression
-                    </button>
-                </div>
-            </Form> -->
             <Form @submit="handleDeleteUserProfile" action="" method="post" class="popup-inner__form">
                 <p>Veuillez vérifier votre mot de passe pour sécuriser la suppression de votre compte</p>
                 <div>
