@@ -23,7 +23,15 @@ export const post = {
                     })
         }, //End of getAllPosts
 
-
+        createPost({}, post) {
+            return PostService.createPost(post)
+                .then(post => {
+                        return Promise.resolve(post);
+                    },
+                    error => {
+                        return Promise.reject(error);
+                    })
+        },
     },
 
 

@@ -22,9 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     content: DataTypes.STRING,
     imageUrl: DataTypes.STRING,
-    username: DataTypes.STRING,
-    bio: DataTypes.STRING,
-    profilePic: DataTypes.STRING,
     likes: {
       type: DataTypes.INTEGER,
       defaultValue: 0

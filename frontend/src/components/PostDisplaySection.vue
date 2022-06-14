@@ -4,10 +4,11 @@
             <div v-for="post in post.postData.allPosts" class="postDisplaySection__post">
 
                 <div class="postDisplaySection__post__creator">
-                    <img v-bind:src="post.profilePic" alt="" class="postDisplaySection__post__creator-profilePic">
+                    <img v-bind:src="post.Users.profilePic" alt="" class="postDisplaySection__post__creator-profilePic">
                     <div class="postDisplaySection__post__creator-text">
-                        <span class="postDisplaySection__post__creator-text-username">{{ post.username }}</span>
-                        <span class="postDisplaySection__post__creator-text-published">Publié il y a ...</span>
+                        <span class="postDisplaySection__post__creator-text-username">{{ post.Users.username }}</span>
+                        <span class="postDisplaySection__post__creator-text-published">Publié il y a {{ post.createdAt
+                        }}</span>
                     </div>
                 </div>
 

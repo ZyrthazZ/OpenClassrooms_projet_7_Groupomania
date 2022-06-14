@@ -20,33 +20,34 @@
 
             <img :src="user.userData.profilePic" alt="" class="create__post__interface-profilepic">
 
-            <form action="" method="post" class="create__post__interface__form">
+            <Form @submit="handleCreatePost" action="" method="post" class="create__post__interface__form">
 
                 <div class="create__post__interface__form-title">
-                    <input type="text" placeholder="Titre de votre post" name="title" id="title" required>
+                    <Field type="text" placeholder="Titre de votre post" name="title" id="title" />
                 </div>
 
                 <div class="create__post__interface__form-text">
-                    <input type="text" placeholder="Qu'avez-vous en tête ?" name="text" id="text">
+                    <Field type="text" placeholder="Qu'avez-vous en tête ?" name="content" id="content" />
                 </div>
 
                 <div class="create__post__interface__form-buttons">
+
                     <div class="create__post__interface__form-buttons-file">
-                        <label for="file"><img src="../assets/icons/file-image-regular.svg" alt=""
+                        <label for="img"><img src="../assets/icons/file-image-regular.svg" alt=""
                                 class="create__post__interface__form-buttons-file-icon"></label>
-                        <input type="file" name="file" id="file">
+                        <Field type="file" name="img" id="img" />
                     </div>
 
                     <div class="create__post__interface__form-buttons-submit">
-                        <button type="submit" name="btnSendForm"
-                            class="create__post__interface__form-buttons-submit-button"><img
+                        <button type="submit" class="create__post__interface__form-buttons-submit-button"><img
                                 src="../assets/icons/send-icon.svg" alt=""
-                                class="create__post__interface__form-buttons-submit-icon"></button>
+                                class="create__post__interface__form-buttons-submit-icon">
+                        </button>
                     </div>
+
                 </div>
 
-            </form>
-
+            </Form>
 
         </div>
 
@@ -56,13 +57,65 @@
 
 <script>
 import { mapState } from 'vuex'
+import { Form, Field, ErrorMessage } from 'vee-validate';
 
 export default {
     name: 'PostCreateSection',
 
+    components: {
+        Form,
+        Field,
+        ErrorMessage
+    },
+
     computed: {
         ...mapState(['user']),
-    }
+    },
+
+    methods: {
+        handleCreatePost(post) {
+            console.log(post)
+
+            //Defines what the post object contains
+            let { title, content, ...imageUrl } = post;
+
+            //If the user send a picture, then we use it in post
+            if (imageUrl.img) {
+                //Defines the data object containing the title, the content and the image
+                let data = {
+                    title: title,
+                    content: content,
+                    image: imageUrl.img[0]
+                }
+                console.log(data);
+
+                //Passes the data object to the createPost in the post module store
+                return this.$store.dispatch("post/createPost", data)
+                    .then(() => {
+                        //As a promise we use the getAllPosts function in the post module store, this way the new post is immediately displayed
+                        this.$store.dispatch("post/getAllPosts")
+                    })
+                    .catch()
+
+                //If the user doesn't send a picture, then we don't use it in post
+            } else {
+                //Defines the data object containing the title and the content
+                let data = {
+                    title: title,
+                    content: content,
+                }
+                console.log(data);
+
+                //Passes the data object to the createPost in the post module store
+                return this.$store.dispatch("post/createPost", data)
+                    .then(() => {
+                        //As a promise we use the getAllPosts function in the post module store, this way the new post is immediately displayed
+                        this.$store.dispatch("post/getAllPosts")
+                    })
+                    .catch()
+            }
+        }
+    },
 }
 </script>
 

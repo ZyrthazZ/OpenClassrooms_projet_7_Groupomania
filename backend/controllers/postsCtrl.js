@@ -25,10 +25,7 @@ module.exports = {
                 title: req.body.title,
                 content: req.body.content,
                 imageUrl: (req.file ? `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}` : ''),
-                UserId: req.userId,
-                username: searchedUser.username,
-                bio: searchedUser.bio,
-                profilePic: searchedUser.profilePic
+                UserId: searchedUser.id,
             })
             //Cannot create post
             if (!createdPost) {
@@ -111,15 +108,13 @@ module.exports = {
                 attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                 limit: (!isNaN(limit)) ? limit : null,
                 offset: (!isNaN(offset)) ? offset : null,
-                /* include: [{
+                group: ['id'],
+                include: [{
                     model: models.User,
-                    //add profilePic attribute ? 
-                }] */
+                    attributes: ['username', 'profilePic', 'bio'],
+                }]
             }
-            //Search for the users
-            const searchedUsers = await models.User.findAll({
-                attributes: ['id', 'username', 'bio', 'profilePic'],
-            })
+
             //Search for the posts 
             const allPosts = await models.Post.findAll(payload)
             if (allPosts) {

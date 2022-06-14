@@ -15,6 +15,23 @@ class PostService {
             })
             .catch()
     }
+
+    //createPost, this function will create a post and the API will register it in the DBB
+    createPost(post) {
+        console.log(post)
+
+        return axiosService.post(API_URL + 'new', post, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+            })
+            .then(response => {
+                console.log(response)
+                return response
+            })
+            .catch()
+    }
+
 }
 
 //Exports the class
