@@ -108,11 +108,14 @@ module.exports = {
                 attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                 limit: (!isNaN(limit)) ? limit : null,
                 offset: (!isNaN(offset)) ? offset : null,
-                group: ['id'],
                 include: [{
+                    model: models.Comment,
+                }],
+                /* group: ['id'], */
+                /* include: [{
                     model: models.User,
                     attributes: ['username', 'profilePic', 'bio'],
-                }]
+                }] */
             }
 
             //Search for the posts 

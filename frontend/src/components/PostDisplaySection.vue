@@ -1,7 +1,8 @@
 <template>
     <section class="postDisplaySection">
-        <div class="postDisplaySection">
-            <div v-for="post in post.postData.allPosts" class="postDisplaySection__post">
+        <div v-for="post in post.postData.allPosts">
+
+            <div class="postDisplaySection__post">
 
                 <div class="postDisplaySection__post__creator">
                     <img v-bind:src="post.Users.profilePic" alt="" class="postDisplaySection__post__creator-profilePic">
@@ -18,12 +19,17 @@
                         <p class="postDisplaySection__post__content-text-text">{{ post.content }}
                         </p>
                     </div>
+
                     <div class="postDisplaySection__post__content-imgContainer">
                         <img v-show="post.imageUrl" v-bind:src="post.imageUrl" alt=""
                             class="postDisplaySection__post__content-imgContainer-img">
                     </div>
+
                 </div>
+
             </div>
+            <span>{{ post.likes }}</span>
+            <span>{{ post.commentsCount }}</span>
         </div>
     </section>
 </template>
@@ -54,8 +60,9 @@ export default {
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
     margin: 30px auto auto auto;
+    justify-content: center;
+    align-items: center;
 
     &__post {
         background-color: $secondary-color;
