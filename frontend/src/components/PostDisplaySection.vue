@@ -8,8 +8,8 @@
                     <img v-bind:src="post.Users.profilePic" alt="" class="postDisplaySection__post__creator-profilePic">
                     <div class="postDisplaySection__post__creator-text">
                         <span class="postDisplaySection__post__creator-text-username">{{ post.Users.username }}</span>
-                        <span class="postDisplaySection__post__creator-text-published">Publié il y a {{ post.createdAt
-                        }}</span>
+                        <span class="postDisplaySection__post__creator-text-published">
+                            Publié {{ dayjs(post.createdAt).fromNow() }}</span>
                     </div>
                 </div>
 
@@ -37,8 +37,20 @@
 <script>
 import { mapState } from 'vuex'
 
+//Here we have the dayjs logic, to display dates in a more readable way
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import * as locale from 'dayjs/locale/fr'
+
+dayjs.extend(relativeTime).locale(locale)
+
+
 export default {
     name: 'postDisplaySection',
+
+    data() {
+        return { dayjs }
+    },
 
     computed: {
         ...mapState(['post']),
@@ -92,25 +104,24 @@ export default {
                     padding-bottom: 2px;
                 }
             }
-
         }
 
         &__content {
+
             &-text {
                 padding: 15px;
                 background-color: $primary-color;
-
-
             }
 
             &-imgContainer {
-                margin-bottom: -5px;
 
                 &-img {
                     height: 100%;
                     width: 100%;
                     object-fit: contain;
                     border-radius: 0px 0px 15px 15px;
+
+                    margin-bottom: -5px;
                 }
             }
         }
