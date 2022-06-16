@@ -5,7 +5,7 @@
             <div class="postDisplaySection__post">
 
                 <div class="postDisplaySection__post__creator">
-                    <img v-bind:src="post.User.profilePic" alt="" class="postDisplaySection__post__creator-profilePic">
+                    <img v-bind:src="post.User.profilePic" alt="Image de profil de l'utilisateur" class="postDisplaySection__post__creator-profilePic">
                     <div class="postDisplaySection__post__creator-text">
                         <span class="postDisplaySection__post__creator-text-username">{{ post.User.username }}</span>
                         <span class="postDisplaySection__post__creator-text-published">
@@ -30,14 +30,14 @@
 
             <div class="postDisplaySection__post__social">
                 <div class="postDisplaySection__post__social-like">
-                    <button @click="handleLikePost(post.id)" class="postDisplaySection__post__social-like-button"><img
-                            src="../assets/icons/like-solid-icon.svg" alt=""
+                    <button @click="handleLikePost(post.id)" class="postDisplaySection__post__social-like-button"
+                        title="J'aime"><img src="../assets/icons/like-solid-icon.svg" alt=""
                             class="postDisplaySection__post__social-like-button-icon"></button>
                     <span class="postDisplaySection__post__social-like-count">{{ post.likes }}</span>
                 </div>
 
                 <div class="postDisplaySection__post__social-comment">
-                    <button @click="" class="postDisplaySection__post__social-comment-button"><img
+                    <button @click="" class="postDisplaySection__post__social-comment-button" title="Commentaires"><img
                             src="../assets/icons/comment-regular-icon.svg" alt=""
                             class="postDisplaySection__post__social-comment-button-icon"></button>
                     <span class="postDisplaySection__post__social-comment-count">
@@ -159,6 +159,7 @@ export default {
 
             &-like {
                 &-button {
+                    cursor: pointer;
                     &-icon {
                         width: 30px;
                     }
@@ -171,6 +172,7 @@ export default {
 
             &-comment {
                 &-button {
+                    cursor: pointer;
                     &-icon {
                         width: 30px;
                     }

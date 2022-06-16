@@ -195,6 +195,7 @@ export default {
             border-radius: 15px;
             padding: 15px;
             background-color: $primary-color;
+            cursor: pointer;
         }
     }
 }

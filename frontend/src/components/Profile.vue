@@ -10,7 +10,7 @@
 
     <section class="profile">
 
-        <img :src="user.userData.profilePic" alt="Photo de profil de l'utilisateur" class="profile__pic">
+        <img :src="user.userData.profilePic" alt="Image de profil de l'utilisateur" class="profile__pic">
 
         <p class="profile__introduction">
             Bienvenue {{ user.userData.username }},<br /> sur cette page vous pouvez modifier les
@@ -37,11 +37,11 @@
 
             <p>Photo de profil</p>
             <div class="profile__form-img">
-                <img :src="user.userData.profilePic" alt="Photo de profil de l'utilisateur"
+                <img :src="user.userData.profilePic" alt="Image de profil de l'utilisateur"
                     class="profile__form-img-profilePic">
 
                 <label for="image"><img src="../assets/icons/file-image-regular.svg" alt=""
-                        class="profile__form-img-icon"></label>
+                        class="profile__form-img-icon" title="Ajouter une image de profil"></label>
                 <Field type="file" name="image" id="image" />
 
             </div>
@@ -212,6 +212,7 @@ export default {
 
             &-icon {
                 width: 50px;
+                cursor: pointer;
             }
 
             input {
@@ -225,6 +226,7 @@ export default {
             border-radius: 15px;
             padding: 10px;
             background-color: $primary-color;
+            cursor: pointer;
         }
     }
 
@@ -239,5 +241,6 @@ export default {
     border-radius: 15px;
     padding: 10px;
     background-color: $primary-color;
+    cursor: pointer;
 }
 </style>

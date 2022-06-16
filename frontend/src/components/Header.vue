@@ -5,8 +5,8 @@
 
         <div class="header__buttons">
             <router-link to='/profile'>
-                <button class="header__profile">
-                    <img :src="user.userData.profilePic" alt="" class="header__profile-img">
+                <button class="header__profile" title="Profil">
+                    <img :src="user.userData.profilePic" alt="Image de profil de l'utilisateur" class="header__profile-img">
                     <span class="header__profile-pseudo">{{ user.userData.username }}</span>
                 </button>
             </router-link>

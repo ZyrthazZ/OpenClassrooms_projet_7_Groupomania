@@ -1,5 +1,5 @@
 <template>
-    <button @click="handleLogout" class="logout__button">
+    <button @click="handleLogout" class="logout__button" title="Se déconnecter">
         <img src="../assets/icons/logout-icon.svg" alt="" class="logout__button-icon">
     </button>
 </template>
@@ -27,6 +27,7 @@ export default {
     border: none;
     border-radius: 15px;
     background-color: $background-color;
+    cursor: pointer;
 
     &-icon {
         width: 30px;

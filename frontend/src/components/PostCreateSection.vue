@@ -18,7 +18,8 @@
         <div class="create__post__interface">
 
 
-            <img :src="user.userData.profilePic" alt="" class="create__post__interface-profilepic">
+            <img :src="user.userData.profilePic" alt="Image de profil de l'utilisateur"
+                class="create__post__interface-profilepic">
 
             <Form @submit="handleCreatePost" action="" method="post" class="create__post__interface__form">
 
@@ -34,13 +35,14 @@
 
                     <div class="create__post__interface__form-buttons-file">
                         <label for="img"><img src="../assets/icons/file-image-regular.svg" alt=""
-                                class="create__post__interface__form-buttons-file-icon"></label>
+                                class="create__post__interface__form-buttons-file-icon"
+                                title="Ajouter une image"></label>
                         <Field type="file" name="img" id="img" />
                     </div>
 
                     <div class="create__post__interface__form-buttons-submit">
-                        <button type="submit" class="create__post__interface__form-buttons-submit-button"><img
-                                src="../assets/icons/send-icon.svg" alt=""
+                        <button type="submit" class="create__post__interface__form-buttons-submit-button"
+                            title="Publier"><img src="../assets/icons/send-icon.svg" alt=""
                                 class="create__post__interface__form-buttons-submit-icon">
                         </button>
                     </div>
@@ -172,6 +174,7 @@ export default {
 
                     &-icon {
                         width: 50px;
+                        cursor: pointer;
                     }
                 }
 
@@ -185,6 +188,7 @@ export default {
                     &-icon {
                         width: 60px;
                         border: none;
+                        cursor: pointer;
                     }
                 }
             }

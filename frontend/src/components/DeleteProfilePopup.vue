@@ -119,6 +119,7 @@ export default {
             border: none;
             border-radius: 5px;
             padding: 5px;
+            cursor: pointer;
         }
 
         &__form {
@@ -149,6 +150,7 @@ export default {
                 border-radius: 15px;
                 padding: 15px;
                 background-color: green;
+                cursor: pointer;
             }
         }
     }
