@@ -12,22 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      //Met en place la relation "m to m" (many to many) pour une relation entre la table users et posts *
-      //en passant par la table de jonction Comments
-      models.User.belongsToMany(models.Post, {
-        through: models.Comment,
-        foreignKey: 'userId',
-        otherKey: 'postId',
-      });
-
-      //Met en place la relation "m to m" (many to many) pour une relation entre la table users et posts *
-      //en passant par la table de jonction Likes
-      models.Post.belongsToMany(models.User, {
-        through: models.Comment,
-        foreignKey: 'postId',
-        otherKey: 'userId'
-      });
-
       //Fait le lien entre les clef étrangères (foreignKey) et la table de référence
       models.Comment.belongsTo(models.User, {
         foreignKey: 'userId',
@@ -39,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'postId',
         as: 'post',
       });
+      models.Comment.hasMany(models.Like);
     }
   }
   Comment.init({

@@ -5,9 +5,9 @@
             <div class="postDisplaySection__post">
 
                 <div class="postDisplaySection__post__creator">
-                    <img v-bind:src="post.Users.profilePic" alt="" class="postDisplaySection__post__creator-profilePic">
+                    <img v-bind:src="post.User.profilePic" alt="" class="postDisplaySection__post__creator-profilePic">
                     <div class="postDisplaySection__post__creator-text">
-                        <span class="postDisplaySection__post__creator-text-username">{{ post.Users.username }}</span>
+                        <span class="postDisplaySection__post__creator-text-username">{{ post.User.username }}</span>
                         <span class="postDisplaySection__post__creator-text-published">
                             Publié {{ dayjs(post.createdAt).fromNow() }}</span>
                     </div>
@@ -29,6 +29,7 @@
 
             </div>
             <span>{{ post.likes }}</span>
+            <span>{{ post.Comments }}</span>
             <span>{{ post.commentsCount }}</span>
         </div>
     </section>

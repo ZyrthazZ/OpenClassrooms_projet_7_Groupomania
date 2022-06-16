@@ -110,12 +110,10 @@ module.exports = {
                 offset: (!isNaN(offset)) ? offset : null,
                 include: [{
                     model: models.Comment,
-                }],
-                /* group: ['id'], */
-                /* include: [{
+                }, {
                     model: models.User,
                     attributes: ['username', 'profilePic', 'bio'],
-                }] */
+                }],
             }
 
             //Search for the posts 
