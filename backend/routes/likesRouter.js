@@ -1,9 +1,9 @@
 //Imports
 
-var express = require("express");
-var router = express.Router();
-var likesCtrl = require("../controllers/likesCtrl");
-var auth_user = require('../middleware/auth_user');
+const express = require("express");
+const router = express.Router();
+const likesCtrl = require("../controllers/likesCtrl");
+const auth_user = require('../middleware/auth_user');
 
 //Routes 
 

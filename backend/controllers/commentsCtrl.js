@@ -10,7 +10,7 @@ module.exports = {
         //Params
         const postId = req.params.postId;
         const content = req.body.content;
-
+        console.log("postId" + postId)
         try {
             //Search the post to comment
             const searchedPost = await models.Post.findByPk(postId)
