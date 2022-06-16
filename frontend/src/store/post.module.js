@@ -32,7 +32,20 @@ export const post = {
                         return Promise.reject(error);
                     })
         },
+
+        likePost({}, postId) {
+            return PostService.likePost(postId)
+                .then(
+                    response => {
+                        return Promise.resolve(response);
+                    },
+                    error => {
+                        return Promise.reject(error);
+                    })
+        }, //End of likePost
     },
+
+
 
 
     mutations: {

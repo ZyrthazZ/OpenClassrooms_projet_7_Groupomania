@@ -32,6 +32,15 @@ class PostService {
             .catch()
     }
 
+    likePost(postId) {
+
+        return axiosService.post(API_URL + postId + "/like")
+            .then(response => {
+                console.log(response)
+                return response
+            })
+            .catch()
+    }
 }
 
 //Exports the class

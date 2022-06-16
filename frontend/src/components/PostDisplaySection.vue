@@ -1,6 +1,6 @@
 <template>
     <section class="postDisplaySection">
-        <div v-for="post in post.postData.allPosts">
+        <div v-for="post in post.postData.allPosts" :key="post.id">
 
             <div class="postDisplaySection__post">
 
@@ -24,13 +24,29 @@
                         <img v-show="post.imageUrl" v-bind:src="post.imageUrl" alt=""
                             class="postDisplaySection__post__content-imgContainer-img">
                     </div>
-
                 </div>
 
             </div>
-            <span>{{ post.likes }}</span>
-            <span>{{ post.Comments }}</span>
-            <span>{{ post.commentsCount }}</span>
+
+            <div class="postDisplaySection__post__social">
+                <div class="postDisplaySection__post__social-like">
+                    <button @click="handleLikePost(post.id)" class="postDisplaySection__post__social-like-button"><img
+                            src="../assets/icons/like-solid-icon.svg" alt=""
+                            class="postDisplaySection__post__social-like-button-icon"></button>
+                    <span class="postDisplaySection__post__social-like-count">{{ post.likes }}</span>
+                </div>
+
+                <div class="postDisplaySection__post__social-comment">
+                    <button @click="" class="postDisplaySection__post__social-comment-button"><img
+                            src="../assets/icons/comment-regular-icon.svg" alt=""
+                            class="postDisplaySection__post__social-comment-button-icon"></button>
+                    <span class="postDisplaySection__post__social-comment-count">
+                        {{ post.commentsCount }}</span>
+                    <br />
+                    <span class="postDisplaySection__post__social-comment-content">{{ post.Comments }}</span>
+                </div>
+            </div>
+
         </div>
     </section>
 </template>
@@ -42,7 +58,6 @@ import { mapState } from 'vuex'
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import * as locale from 'dayjs/locale/fr'
-
 dayjs.extend(relativeTime).locale(locale)
 
 
@@ -55,6 +70,16 @@ export default {
 
     computed: {
         ...mapState(['post']),
+    },
+
+    methods: {
+        handleLikePost(postId) {
+            console.log(postId)
+            this.$store.dispatch("post/likePost", postId)
+                .then(() => {
+                    this.$store.dispatch("post/getAllPosts")
+                })
+        }
     },
 
     mounted() {
@@ -123,6 +148,36 @@ export default {
                     border-radius: 0px 0px 15px 15px;
 
                     margin-bottom: -5px;
+                }
+            }
+        }
+
+        &__social {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            &-like {
+                &-button {
+                    &-icon {
+                        width: 30px;
+                    }
+
+                    border: none;
+                    border-radius: 15px;
+                    background-color: $background-color;
+                }
+            }
+
+            &-comment {
+                &-button {
+                    &-icon {
+                        width: 30px;
+                    }
+
+                    border: none;
+                    border-radius: 15px;
+                    background-color: $background-color;
                 }
             }
         }
