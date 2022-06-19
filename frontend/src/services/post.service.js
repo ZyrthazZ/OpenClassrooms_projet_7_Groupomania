@@ -1,4 +1,5 @@
 //Import of axios
+import axios from 'axios';
 import axiosService from '../../src/config_axios';
 
 const API_URL = 'http://localhost:8080/api/posts/';
@@ -35,6 +36,19 @@ class PostService {
     likePost(postId) {
 
         return axiosService.post(API_URL + postId + "/like")
+            .then(response => {
+                console.log(response)
+                return response
+            })
+            .catch()
+    }
+
+    commentPost(comment) {
+        console.log(comment)
+
+        return axiosService.post(API_URL + "comments/" + comment.postId + "/new", comment, {
+                content: comment.content
+            })
             .then(response => {
                 console.log(response)
                 return response

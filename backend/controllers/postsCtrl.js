@@ -110,6 +110,11 @@ module.exports = {
                 offset: (!isNaN(offset)) ? offset : null,
                 include: [{
                     model: models.Comment,
+                    include: [{
+                        model: models.User,
+                        as: 'user',
+                        attributes: ['username', 'profilePic', 'bio']
+                    }],
                 }, {
                     model: models.User,
                     attributes: ['username', 'profilePic', 'bio'],

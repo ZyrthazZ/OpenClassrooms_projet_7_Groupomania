@@ -43,6 +43,17 @@ export const post = {
                         return Promise.reject(error);
                     })
         }, //End of likePost
+
+        commentPost({}, comment) {
+            return PostService.commentPost(comment)
+                .then(
+                    comment => {
+                        return Promise.resolve(comment);
+                    },
+                    error => {
+                        return Promise.reject(error);
+                    })
+        }, //End of commentPost
     },
 
 

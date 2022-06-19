@@ -1,11 +1,13 @@
 <template>
     <section class="postDisplaySection">
         <div v-for="post in post.postData.allPosts" :key="post.id">
+            <!-- :key="post.id" -->
 
             <div class="postDisplaySection__post">
 
                 <div class="postDisplaySection__post__creator">
-                    <img v-bind:src="post.User.profilePic" alt="Image de profil de l'utilisateur" class="postDisplaySection__post__creator-profilePic">
+                    <img v-bind:src="post.User.profilePic" alt="Image de profil de l'utilisateur"
+                        class="postDisplaySection__post__creator-profilePic">
                     <div class="postDisplaySection__post__creator-text">
                         <span class="postDisplaySection__post__creator-text-username">{{ post.User.username }}</span>
                         <span class="postDisplaySection__post__creator-text-published">
@@ -37,13 +39,30 @@
                 </div>
 
                 <div class="postDisplaySection__post__social-comment">
-                    <button @click="" class="postDisplaySection__post__social-comment-button" title="Commentaires"><img
-                            src="../assets/icons/comment-regular-icon.svg" alt=""
-                            class="postDisplaySection__post__social-comment-button-icon"></button>
-                    <span class="postDisplaySection__post__social-comment-count">
-                        {{ post.commentsCount }}</span>
-                    <br />
-                    <span class="postDisplaySection__post__social-comment-content">{{ post.Comments }}</span>
+                    <button @click="showComments" class="postDisplaySection__post__social-comment-button"
+                        title="Commentaires"><img src="../assets/icons/comment-regular-icon.svg" alt=""
+                            class="postDisplaySection__post__social-comment-button-icon"><span
+                            class="postDisplaySection__post__social-comment-count">
+                            {{ post.commentsCount }}</span></button>
+
+                    <div v-show="tomate">
+                        <!-- This div contains the comment section, which is hidden except on click of the showComments button -->
+
+                        <Form @submit="handleCommentPost" class="postDisplaySection__post__social-comment-form">
+                            <div class="postDisplaySection__post__social-comment-form-text">
+                                <Field type="text" name="content" id="content" placeholder="Qu'en pensez-vous ?" />
+                            </div>
+                            <ErrorMessage name="content" />
+                            <div class="postDisplaySection__post__social-comment-form-postId">
+                                <Field type="text" name="postId" id="postId" :value="post.id" />
+                            </div>
+                            <button type="submit"
+                                class="postDisplaySection__post__social-comment-form-button">Commenter</button>
+                        </Form>
+
+                        <span class="postDisplaySection__post__social-comment-content">{{ post.Comments }}</span>
+
+                    </div>
                 </div>
             </div>
 
@@ -53,6 +72,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { Form, Field, ErrorMessage } from 'vee-validate';
 
 //Here we have the dayjs logic, to display dates in a more readable way
 import dayjs from 'dayjs';
@@ -65,7 +85,16 @@ export default {
     name: 'postDisplaySection',
 
     data() {
-        return { dayjs }
+        return {
+            dayjs,
+            tomate: false,
+        }
+    },
+
+    components: {
+        Form,
+        Field,
+        ErrorMessage
     },
 
     computed: {
@@ -73,12 +102,35 @@ export default {
     },
 
     methods: {
+        //Begin of the like post function
         handleLikePost(postId) {
             console.log(postId)
             this.$store.dispatch("post/likePost", postId)
                 .then(() => {
                     this.$store.dispatch("post/getAllPosts")
                 })
+        }, //End of handleLikePost
+
+        //Begin of the comment creation function
+        handleCommentPost(comment) {
+            //We take the form data, with the content of the comment, and with the 
+            //post.id which is hidden in an invisible input, as :value, so the postId
+            //get past in the comment object
+
+            console.log(comment)
+
+            this.$store.dispatch("post/commentPost", comment)
+                .then(() => {
+                    this.$store.dispatch("post/getAllPosts")
+                })
+        }, //End of handleCommentPost
+
+        showComments() {
+            if (this.tomate) {
+                this.tomate = false
+            } else {
+                this.tomate = true
+            }
         }
     },
 
@@ -160,6 +212,7 @@ export default {
             &-like {
                 &-button {
                     cursor: pointer;
+
                     &-icon {
                         width: 30px;
                     }
@@ -173,6 +226,7 @@ export default {
             &-comment {
                 &-button {
                     cursor: pointer;
+
                     &-icon {
                         width: 30px;
                     }
@@ -180,6 +234,33 @@ export default {
                     border: none;
                     border-radius: 15px;
                     background-color: $background-color;
+                }
+
+                &-form {
+
+                    text-align: center;
+
+                    input {
+                        background-color: $primary-color;
+                        border-radius: 15px;
+                        border: none;
+                        padding: 15px;
+                        margin-bottom: 10px;
+                        width: 30vw;
+                    }
+
+                    &-postId {
+                        display: none;
+                    }
+
+                    &-button {
+                        margin-top: 20px;
+                        border: none;
+                        border-radius: 15px;
+                        padding: 10px;
+                        background-color: $primary-color;
+                        cursor: pointer;
+                    }
                 }
             }
         }
