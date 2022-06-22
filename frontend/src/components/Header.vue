@@ -6,7 +6,8 @@
         <div class="header__buttons">
             <router-link to='/profile'>
                 <button class="header__profile" title="Profil">
-                    <img :src="user.userData.profilePic" alt="Image de profil de l'utilisateur" class="header__profile-img">
+                    <img :src="user.userData.profilePic" alt="Image de profil de l'utilisateur"
+                        class="header__profile-img">
                     <span class="header__profile-pseudo">{{ user.userData.username }}</span>
                 </button>
             </router-link>
@@ -59,8 +60,9 @@ export default {
 .header {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     margin: auto 5px 50px 5px;
+
 
     &__logo {
         width: 150px;

@@ -30,7 +30,7 @@
 
             </div>
 
-            <div class="postDisplaySection__post__social">
+            <div class="postDisplaySection__post__social-buttons">
                 <div class="postDisplaySection__post__social-like">
                     <button @click="handleLikePost(post.id)" class="postDisplaySection__post__social-like-button"
                         title="J'aime"><img src="../assets/icons/like-solid-icon.svg" alt=""
@@ -43,27 +43,42 @@
                         title="Commentaires"><img src="../assets/icons/comment-regular-icon.svg" alt=""
                             class="postDisplaySection__post__social-comment-button-icon"><span
                             class="postDisplaySection__post__social-comment-count">
-                            {{ post.commentsCount }}</span></button>
-
-                    <div v-show="tomate">
-                        <!-- This div contains the comment section, which is hidden except on click of the showComments button -->
-
-                        <Form @submit="handleCommentPost" class="postDisplaySection__post__social-comment-form">
-                            <div class="postDisplaySection__post__social-comment-form-text">
-                                <Field type="text" name="content" id="content" placeholder="Qu'en pensez-vous ?" />
-                            </div>
-                            <ErrorMessage name="content" />
-                            <div class="postDisplaySection__post__social-comment-form-postId">
-                                <Field type="text" name="postId" id="postId" :value="post.id" />
-                            </div>
-                            <button type="submit"
-                                class="postDisplaySection__post__social-comment-form-button">Commenter</button>
-                        </Form>
-
-                        <span class="postDisplaySection__post__social-comment-content">{{ post.Comments }}</span>
-
-                    </div>
+                            {{ post.commentsCount }}</span>
+                    </button>
                 </div>
+            </div>
+
+            <div class="postDisplaySection__post__social">
+                <!-- <div v-show="tomate"> -->
+                <!-- This div contains the comment section, which is hidden except on click of the showComments button -->
+                <div>
+                    <Form @submit="handleCommentPost" class="postDisplaySection__post__social-comment-form">
+                        <div class="postDisplaySection__post__social-comment-form-text">
+                            <Field type="text" name="content" id="content" placeholder="Qu'en pensez-vous ?" />
+                        </div>
+                        <ErrorMessage name="content" />
+                        <div class="postDisplaySection__post__social-comment-form-postId">
+                            <Field type="text" name="postId" id="postId" :value="post.id" />
+                        </div>
+                        <button type="submit"
+                            class="postDisplaySection__post__social-comment-form-button">Commenter</button>
+                    </Form>
+
+                    <div v-for="comment in post.Comments" class="postDisplaySection__post__social-comment-content">
+                        <div class="postDisplaySection__post__social-comment-content-creator">
+                            <img :src="comment.user.profilePic"
+                                alt="Photo de profil de la personne ayant commenté ce post"
+                                class="postDisplaySection__post__social-comment-content-creator-profilePic" />
+                            <span class="postDisplaySection__post__social-comment-content-creator-username">
+                                {{ comment.user.username }}</span>
+                        </div>
+                        <span class="postDisplaySection__post__social-comment-content-text">{{ comment.content
+                        }}</span>
+                    </div>
+
+                </div>
+
+                <!-- </div> -->
             </div>
 
         </div>
@@ -150,15 +165,32 @@ export default {
 
     display: flex;
     flex-direction: column;
-    margin: 30px auto auto auto;
+    margin: 40px auto auto auto;
     justify-content: center;
-    align-items: center;
+
+    @include desktop {
+        margin: 80px auto auto auto;
+    }
 
     &__post {
         background-color: $secondary-color;
-        width: 70vw;
         border-radius: 15px;
-        margin-bottom: 50px;
+        margin: auto;
+        margin-bottom: 40px;
+
+        width: 100%;
+
+        @include mobile {
+            width: 80%;
+        }
+
+        @include tablet {
+            width: 60%;
+        }
+
+        @include desktop {
+            max-width: 1200px;
+        }
 
         &__creator {
             display: flex;
@@ -206,38 +238,54 @@ export default {
 
         &__social {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             justify-content: space-between;
+            margin-bottom: 70px;
+
+            @include desktop {
+                margin-bottom: 200px;
+            }
+
+            &-buttons {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+
+                @include desktop {
+                    margin: auto 300px auto 300px;
+                }
+            }
 
             &-like {
+
+
                 &-button {
                     cursor: pointer;
+                    border: none;
+                    border-radius: 15px;
+                    background-color: $background-color;
 
                     &-icon {
                         width: 30px;
                     }
-
-                    border: none;
-                    border-radius: 15px;
-                    background-color: $background-color;
                 }
             }
 
             &-comment {
+
+
                 &-button {
                     cursor: pointer;
+                    border: none;
+                    border-radius: 15px;
+                    background-color: $background-color;
 
                     &-icon {
                         width: 30px;
                     }
-
-                    border: none;
-                    border-radius: 15px;
-                    background-color: $background-color;
                 }
 
                 &-form {
-
                     text-align: center;
 
                     input {
@@ -260,6 +308,59 @@ export default {
                         padding: 10px;
                         background-color: $primary-color;
                         cursor: pointer;
+                    }
+                }
+
+                &-content {
+                    width: 100%;
+
+                    @include mobile {
+                        width: 80%;
+                    }
+
+                    @include tablet {
+                        width: 60%;
+                    }
+
+                    @include desktop {
+                        max-width: 1200px;
+                    }
+
+                    background-color: $secondary-color;
+
+                    border-radius: 15px;
+                    margin: 40px auto 30px auto;
+
+                    display: flex;
+                    flex-direction: column;
+
+
+
+
+
+                    &-creator {
+                        display: flex;
+                        flex-direction: row;
+                        background-color: $primary-color;
+                        border-radius: 15px 15px 0px 0px;
+
+                        &-username {
+                            align-self: center;
+                            margin: 5px;
+                        }
+
+                        &-profilePic {
+                            width: 40px;
+                            height: 40px;
+                            object-fit: cover;
+                            border-radius: 15px;
+                            align-items: center;
+                            margin: 5px;
+                        }
+                    }
+
+                    &-text {
+                        margin: 10px;
                     }
                 }
             }

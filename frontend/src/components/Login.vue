@@ -142,10 +142,18 @@ export default {
     flex-direction: column;
     justify-content: space-around;
     text-align: center;
-    width: 70vw;
     margin: auto;
     margin-top: 100px;
 
+    width: 100%;
+
+    @include tablet {
+        width: 70%;
+    }
+
+    @include desktop {
+        max-width: 1200px;
+    }
 
     &__form {
         background-color: $secondary-color;
@@ -157,7 +165,11 @@ export default {
             border: none;
             padding: 15px;
             margin: 15px auto 20px auto;
-            width: 40vw;
+            width: 50vw;
+
+            @include desktop {
+                max-width: 700px;
+            }
         }
 
         &-errorMessage {

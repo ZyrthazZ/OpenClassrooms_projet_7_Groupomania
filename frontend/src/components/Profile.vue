@@ -170,8 +170,12 @@ export default {
     justify-content: center;
     margin: auto;
     text-align: center;
-    width: 70vw;
+    width: 80%;
     align-items: center;
+
+    @include desktop {
+        max-width: 1200px;
+    }
 
     &__pic {
         width: 100px;
@@ -197,6 +201,10 @@ export default {
             border: none;
             padding: 10px;
             width: 40vw;
+
+            @include desktop {
+                max-width: 500px;
+            }
         }
 
         &-img {

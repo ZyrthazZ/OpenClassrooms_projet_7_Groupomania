@@ -125,11 +125,22 @@ export default {
 @import '@/assets/sass/main.scss';
 
 .create__post {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 100%;
+
+    @include desktop {
+        max-width: 1200px;
+    }
 
     &__introduction {
-        max-width: 250px;
-        padding-left: 20px;
         margin-bottom: 30px;
+        margin: auto auto 10px auto;
+
+        @include desktop {
+            margin: auto auto 40px auto;
+        }
 
         &-share {
             color: $text-secondary-color;
@@ -160,6 +171,10 @@ export default {
                 padding: 15px;
                 margin-bottom: 10px;
                 width: 60vw;
+
+                @include desktop {
+                    max-width: 1000px;
+                }
             }
 
             &-buttons {
