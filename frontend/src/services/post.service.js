@@ -15,7 +15,7 @@ class PostService {
                 return response
             })
             .catch()
-    }
+    } //End of getAllPosts
 
     //createPost, this function will create a post and the API will register it in the DBB
     createPost(post) {
@@ -31,7 +31,33 @@ class PostService {
                 return response
             })
             .catch()
-    }
+    } //End of createPost
+
+    //updatePost, this function will update a post and register the modification in the DBB
+    updatePost(postUpdate) {
+        console.log(postUpdate)
+
+        return axiosService.put(API_URL + postUpdate.postId + "/updatePost", postUpdate, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+            })
+            .then(response => {
+                console.log(response);
+                return response
+            })
+            .catch()
+    } //End of updatePost
+
+    //deletePost, this function will delete a post and erase it from the DBB
+    deletePost(postId) {
+        return axiosService.delete(API_URL + postId + "/deletePost")
+            .then(response => {
+                console.log(response)
+                return response
+            })
+            .catch()
+    } //End of deletePost
 
     likePost(postId) {
 
@@ -41,7 +67,7 @@ class PostService {
                 return response
             })
             .catch()
-    }
+    } //End of likePost
 
     commentPost(comment) {
         console.log(comment)
@@ -54,7 +80,7 @@ class PostService {
                 return response
             })
             .catch()
-    }
+    } //End of commentPost
 }
 
 //Exports the class

@@ -35,8 +35,8 @@
 
                     <div class="create__post__interface__form-buttons-file">
                         <label for="img"><img src="../assets/icons/file-image-regular.svg" alt=""
-                                class="create__post__interface__form-buttons-file-icon"
-                                title="Ajouter une image"></label>
+                                class="create__post__interface__form-buttons-file-icon" title="Ajouter une image">
+                        </label>
                         <Field type="file" name="img" id="img" />
                     </div>
 
@@ -116,7 +116,7 @@ export default {
                     })
                     .catch()
             }
-        }
+        }, //End of handleCreatePost
     },
 }
 </script>

@@ -31,7 +31,28 @@ export const post = {
                     error => {
                         return Promise.reject(error);
                     })
-        },
+        }, //End of createPost
+
+        updatePost({}, updatePost) {
+            return PostService.updatePost(updatePost)
+                .then(post => {
+                        return Promise.resolve(post);
+                    },
+                    error => {
+                        return Promise.reject(error);
+                    })
+        }, //End of updatePost
+
+        deletePost({}, postId) {
+            return PostService.deletePost(postId)
+                .then(
+                    response => {
+                        return Promise.resolve(response);
+                    },
+                    error => {
+                        return Promise.reject(error);
+                    })
+        }, //End of deletePost
 
         likePost({}, postId) {
             return PostService.likePost(postId)

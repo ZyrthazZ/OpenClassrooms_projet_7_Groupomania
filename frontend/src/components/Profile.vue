@@ -66,7 +66,7 @@
 
 <script>
 import Logout from '../components/Logout.vue';
-import DeleteProfilePopup from './DeleteProfilePopup.vue'
+import DeleteProfilePopup from './popup/DeleteProfilePopup.vue'
 
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { mapState } from 'vuex'

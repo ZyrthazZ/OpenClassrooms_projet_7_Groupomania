@@ -21,3 +21,8 @@ RESET THE DATABASE :
 => sequelize db:drop
 => sequelize db:create 
 => sequelize db:migrate
+
+SET ADMIN : 
+replace * by the id of the user you want to turn into an ADMIN
+
+update `users` set `isAdmin` = '1' where `id` = '*';

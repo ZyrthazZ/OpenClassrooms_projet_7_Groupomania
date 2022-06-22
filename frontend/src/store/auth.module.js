@@ -28,18 +28,19 @@ export const auth = {
         login({
             commit
         }, user) {
-            return AuthService.login(user).then(
-                // Promise which will commit the 'loginSuccess' mutation with the user object, modifyng the state object
-                user => {
-                    commit('loginSuccess', user);
-                    return Promise.resolve(user);
-                },
-                // Error which will commit the 'loginFailure' mutation 
-                error => {
-                    commit('loginFailure');
-                    return Promise.reject(error);
-                }
-            );
+            return AuthService.login(user)
+                .then(
+                    // Promise which will commit the 'loginSuccess' mutation with the user object, modifyng the state object
+                    user => {
+                        commit('loginSuccess', user);
+                        return Promise.resolve(user);
+                    },
+                    // Error which will commit the 'loginFailure' mutation 
+                    error => {
+                        commit('loginFailure');
+                        return Promise.reject(error);
+                    }
+                );
         }, //End of login function
 
         // Function calling the logout function from AuthService
@@ -59,24 +60,26 @@ export const auth = {
         register({
             commit
         }, user) {
-            return AuthService.register(user).then(
-                response => {
-                    // Promise which will commit the 'registerSuccess' mutation 
-                    commit('registerSuccess');
-                    return Promise.resolve(response.data);
-                },
-                error => {
-                    // Error which will commit the 'registerFailure' mutation 
-                    commit('registerFailure');
-                    return Promise.reject(error);
-                }
-            );
+            return AuthService.register(user)
+                .then(
+                    response => {
+                        // Promise which will commit the 'registerSuccess' mutation 
+                        commit('registerSuccess');
+                        return Promise.resolve(response.data);
+                    },
+                    error => {
+                        // Error which will commit the 'registerFailure' mutation 
+                        commit('registerFailure');
+                        return Promise.reject(error);
+                    }
+                );
         } //End of register function
     },
     mutations: {
         loginSuccess(state, user) {
             state.status.loggedIn = true;
             state.user = user;
+            console.log(user)
         },
         loginFailure(state) {
             state.status.loggedIn = false;
