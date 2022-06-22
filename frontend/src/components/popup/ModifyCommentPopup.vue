@@ -5,11 +5,18 @@
                 Annuler
             </button>
 
-            <button @click="handleDeletePost(post)" class="popup-inner__form-confirmButton">Confirmer la
-                suppression du post
-            </button>
+            <Form @submit="handleUpdateComment" action="" method="post" class="popup-inner__form">
+                <p>Contenu</p>
+                <div class="popup-inner__form-content">
+                    <Field type="text" name="content" id="content" :value="comment.content" />
+                </div>
+                <ErrorMessage name="content" class="popup-inner__form-errorMessage" />
 
-            <span v-show="successMessage">Ce post a bien été supprimé !</span>
+                <button type="submit" class="popup-inner__form-confirmButton">Confirmer les modifications</button>
+
+            </Form>
+
+            <span v-show="successMessage">Ce commentaire a bien été modifié !</span>
         </div>
     </div>
 </template>
@@ -18,7 +25,7 @@
 import { Form, Field, ErrorMessage } from 'vee-validate';
 
 export default {
-    name: 'DeletePostPopup',
+    name: 'ModifyCommentPopup',
 
     data() {
         return {
@@ -26,7 +33,7 @@ export default {
         }
     },
 
-    props: ['TogglePopup', 'post'],
+    props: ['TogglePopup', 'comment'],
 
     components: {
         Form,
@@ -35,11 +42,20 @@ export default {
     },
 
     methods: {
-        handleDeletePost(post) {
-            console.log(post)
+        handleUpdateComment(commentUpdate) {
+            console.log(this.comment.id)
 
-            const postId = post.id
-            this.$store.dispatch("post/deletePost", postId)
+            console.log("comment updated ", commentUpdate)
+
+            let { content } = commentUpdate;
+
+            let data = {
+                content: content,
+                commentId: this.comment.id
+            }
+            console.log(data)
+
+            return this.$store.dispatch("post/updateComment", data)
                 .then(() => {
                     this.successMessage = true;
                     this.$store.dispatch("post/getAllPosts")
@@ -47,7 +63,7 @@ export default {
                             setTimeout(() => { this.TogglePopup() }, 2000)
                         })
                 })
-        }
+        }, //End of handleUpdateComment
     },
 
 }
@@ -62,8 +78,8 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    /*     z-index: 99;
- */
+    z-index: 99;
+
     background-color: rgba(0, 0, 0, 0.5);
 
     display: flex;
@@ -122,6 +138,32 @@ export default {
                 padding: 15px;
                 background-color: green;
                 cursor: pointer;
+            }
+
+            &-img {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+
+                &-postPic {
+                    width: 200px;
+                    height: 200px;
+
+                    @include desktop {
+                        width: 300px;
+                        height: 300px;
+                    }
+                }
+
+                &-icon {
+                    width: 50px;
+                    padding-top: 100px;
+                    cursor: pointer;
+                }
+
+                input {
+                    display: none;
+                }
             }
         }
     }

@@ -1,10 +1,12 @@
 <template>
-    <div class="postDisplaySection__post" v-if="test">
+    <div class="postDisplaySection__post">
 
         <div class="postDisplaySection__post__creator">
+
             <div class="postDisplaySection__post__creator-box">
                 <img v-bind:src="post.User.profilePic" alt="Image de profil de l'utilisateur"
                     class="postDisplaySection__post__creator-box-profilePic">
+
                 <div class="postDisplaySection__post__creator-box-text">
                     <span class="postDisplaySection__post__creator-box-text-username">
                         {{ post.User.username }}
@@ -12,6 +14,7 @@
                     <span class="postDisplaySection__post__creator-text-published">
                         Publié {{ dayjs(post.createdAt).fromNow() }}</span>
                 </div>
+
             </div>
 
             <PostOptionsMenu class="postDisplaySection__post__creator-options" v-if="adminOrAuthorOfPost"
@@ -61,22 +64,15 @@
                         <Field type="text" name="content" id="content" placeholder="Qu'en pensez-vous ?" />
                     </div>
                     <ErrorMessage name="content" />
-                    <div class="postDisplaySection__post__social-comment-form-postId">
+                    <!-- <div class="postDisplaySection__post__social-comment-form-postId">
                         <Field type="text" name="postId" id="postId" :value="post.id" />
-                    </div>
+                    </div> -->
                     <button type="submit"
                         class="postDisplaySection__post__social-comment-form-button">Commenter</button>
                 </Form>
 
                 <div v-for="comment in post.Comments" class="postDisplaySection__post__social-comment-content">
-                    <div class="postDisplaySection__post__social-comment-content-creator">
-                        <img :src="comment.user.profilePic" alt="Photo de profil de la personne ayant commenté ce post"
-                            class="postDisplaySection__post__social-comment-content-creator-profilePic" />
-                        <span class="postDisplaySection__post__social-comment-content-creator-username">
-                            {{ comment.user.username }}</span>
-                    </div>
-                    <span class="postDisplaySection__post__social-comment-content-text">{{ comment.content
-                    }}</span>
+                    <SingleComment :comment="comment" />
                 </div>
 
             </div>
@@ -87,7 +83,9 @@
 
 <script>
 import PostOptionsMenu from './optionsMenu/PostOptionsMenu.vue'
+import SingleComment from '../components/SingleComment.vue'
 import { Form, Field, ErrorMessage } from 'vee-validate';
+
 
 //Here we have the dayjs logic, to display dates in a more readable way
 import dayjs from 'dayjs';
@@ -104,7 +102,8 @@ export default {
         Form,
         Field,
         ErrorMessage,
-        PostOptionsMenu
+        SingleComment,
+        PostOptionsMenu,
     },
 
     data() {
@@ -112,7 +111,6 @@ export default {
             dayjs,
             tomate: false,
             adminOrAuthorOfPost: false,
-            test: this.post
         }
     },
 
@@ -131,13 +129,19 @@ export default {
         }, //End of handleLikePost
 
         //Begin of the comment creation function
-        handleCommentPost(comment) {
+        handleCommentPost(content) {
             //We take the form data, with the content of the comment, and with the 
             //post.id which is hidden in an invisible input, as :value, so the postId
             //get past in the comment object
 
-            console.log(comment)
+            const postId = this.post.id;
+            console.log(postId)
+            console.log(content)
 
+            const comment = {
+                postId,
+                content
+            }
             this.$store.dispatch("post/commentPost", comment)
                 .then(() => {
                     this.$store.dispatch("post/getAllPosts")
@@ -156,10 +160,10 @@ export default {
     mounted() {
         const user = JSON.parse(localStorage.getItem('user'));
         console.log(user)
-        const patate = JSON.parse(JSON.stringify(this.post))
-        console.log(patate)
+        const currentPost = JSON.parse(JSON.stringify(this.post))
+        console.log(currentPost)
 
-        if (user.userId == patate.UserId || user.isAdmin) {
+        if (user.userId == currentPost.UserId || user.isAdmin) {
             this.adminOrAuthorOfPost = true;
         }
     }

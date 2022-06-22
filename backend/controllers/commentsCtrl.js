@@ -114,9 +114,22 @@ module.exports = {
                 const destroyedComment = await searchedComment.destroy()
 
                 if (destroyedComment) {
-                    res.status(200).json({
+                    /* res.status(200).json({
                         message: 'comment has been deleted !'
-                    })
+                    }) */
+                    const searchedPost = await models.Post.findByPk(searchedComment.postId)
+
+                    if (searchedPost) {
+                        const decrementCommentsCount = await searchedPost.update({
+                            commentsCount: searchedPost.commentsCount - 1
+                        })
+
+                        if (decrementCommentsCount) {
+                            res.status(200).json({
+                                message: 'comment has been deleted !'
+                            })
+                        }
+                    }
                 }
             }
 

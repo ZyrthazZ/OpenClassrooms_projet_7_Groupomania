@@ -75,6 +75,28 @@ export const post = {
                         return Promise.reject(error);
                     })
         }, //End of commentPost
+
+        deleteComment({}, commentId) {
+            return PostService.deleteComment(commentId)
+                .then(
+                    response => {
+                        return Promise.resolve(response);
+                    },
+                    error => {
+                        return Promise.reject(error);
+                    })
+        }, //End of deleteComment
+
+        updateComment({}, updatedComment) {
+            return PostService.updateComment(updatedComment)
+                .then(
+                    response => {
+                        return Promise.resolve(response);
+                    },
+                    error => {
+                        return Promise.reject(error);
+                    })
+        } //End of updateComment
     },
 
 

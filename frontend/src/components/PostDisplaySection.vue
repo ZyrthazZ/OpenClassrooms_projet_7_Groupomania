@@ -11,7 +11,6 @@ import { mapState } from 'vuex'
 
 import SinglePost from '../components/SinglePost.vue'
 
-
 export default {
     name: 'postDisplaySection',
 
@@ -22,7 +21,7 @@ export default {
     },
 
     components: {
-        SinglePost
+        SinglePost,
     },
 
     computed: {
@@ -38,9 +37,8 @@ export default {
     },
 
     methods: {
+
     },
-
-
 }
 </script>
 
@@ -167,8 +165,6 @@ export default {
             }
 
             &-comment {
-
-
                 &-button {
                     cursor: pointer;
                     border: none;
@@ -229,29 +225,35 @@ export default {
                     display: flex;
                     flex-direction: column;
 
-
-
-
-
                     &-creator {
                         display: flex;
                         flex-direction: row;
+                        justify-content: space-between;
                         background-color: $primary-color;
                         border-radius: 15px 15px 0px 0px;
 
-                        &-username {
-                            align-self: center;
-                            margin: 5px;
+                        &-box {
+                            display: flex;
+
+                            &-username {
+                                align-self: center;
+                                margin: 5px;
+                            }
+
+                            &-profilePic {
+                                width: 40px;
+                                height: 40px;
+                                object-fit: cover;
+                                border-radius: 15px;
+                                align-items: center;
+                                margin: 5px;
+                            }
                         }
 
-                        &-profilePic {
-                            width: 40px;
-                            height: 40px;
-                            object-fit: cover;
-                            border-radius: 15px;
-                            align-items: center;
-                            margin: 5px;
+                        &-options {
+                            padding: 20px 20px 0px 0px;
                         }
+
                     }
 
                     &-text {

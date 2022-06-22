@@ -5,11 +5,11 @@
                 Annuler
             </button>
 
-            <button @click="handleDeletePost(post)" class="popup-inner__form-confirmButton">Confirmer la
-                suppression du post
+            <button @click="handleDeleteComment(comment)" class="popup-inner__form-confirmButton">Confirmer la
+                suppression du commentaire
             </button>
 
-            <span v-show="successMessage">Ce post a bien été supprimé !</span>
+            <span v-show="successMessage">Ce commentaire a bien été supprimé !</span>
         </div>
     </div>
 </template>
@@ -26,7 +26,7 @@ export default {
         }
     },
 
-    props: ['TogglePopup', 'post'],
+    props: ['TogglePopup', 'comment'],
 
     components: {
         Form,
@@ -35,11 +35,11 @@ export default {
     },
 
     methods: {
-        handleDeletePost(post) {
-            console.log(post)
+        handleDeleteComment(comment) {
+            console.log(comment)
 
-            const postId = post.id
-            this.$store.dispatch("post/deletePost", postId)
+            const commentId = comment.id
+            this.$store.dispatch("post/deleteComment", commentId)
                 .then(() => {
                     this.successMessage = true;
                     this.$store.dispatch("post/getAllPosts")
@@ -47,9 +47,8 @@ export default {
                             setTimeout(() => { this.TogglePopup() }, 2000)
                         })
                 })
-        }
+        }, //End of handleDeleteComment
     },
-
 }
 </script>
 
