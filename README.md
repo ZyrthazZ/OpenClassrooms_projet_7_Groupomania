@@ -7,6 +7,8 @@ This is the 7th and last project of the OpenClassrooms Web Developper formation 
     - cd backend for the frontend, run npm install and then run 'npm install -g nodemon' to install nodemon globally on your device
         - in the backend, in the images folder, create a 'posts' folder and a 'profils' folder
         - you can use MAMP to host you mysql database. You must install mySQL as well, and configure the port.
+        - after you've setup MAMP to host your DBB, go to backend/config/config.json.rename ; on this file, remove the '.rename', then
+        if you've setup your root user in mySQL, fill in your password on at least development database
 
 
 //LAUNCH PROJECT//
