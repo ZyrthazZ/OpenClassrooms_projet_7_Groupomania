@@ -1,6 +1,7 @@
 //Imports
 
 const express = require('express');
+const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const usersRouter = require("./routes/usersRouter");
 const postsRouter = require("./routes/postsRouter");
@@ -15,13 +16,20 @@ dotenv.config({
 });
 
 //Instantiate application
-var app = express();
+let app = express();
 
 //Body-Parser configuration
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+
+//Call of helmet
+app.use(helmet());
+
+app.use(helmet.crossOriginResourcePolicy({
+    policy: "cross-origin"
+}));
 
 //Middleware dealing with the CORS errors (Cross Origin Resource Sharing)
 app.use((req, res, next) => {
