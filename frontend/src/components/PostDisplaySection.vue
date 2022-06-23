@@ -89,7 +89,8 @@ export default {
                     object-fit: cover;
                     border-radius: 15px;
                     align-items: center;
-                    margin: 10px;
+                    margin: 10px 5px 0 10px;
+                    cursor: pointer;
                 }
 
                 &-text {
@@ -247,6 +248,7 @@ export default {
                                 border-radius: 15px;
                                 align-items: center;
                                 margin: 5px;
+                                cursor: pointer;
                             }
                         }
 

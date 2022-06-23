@@ -43,8 +43,6 @@ class UserService {
             .catch()
     } //End of updateUserPassword 
 
-
-
     deleteUserProfile(content) {
         const user = JSON.parse(localStorage.getItem('user'));
 
@@ -58,8 +56,34 @@ class UserService {
                 return response
             })
             .catch()
-        //End of deleteUserProfile
-    }
+    } //End of deleteUserProfile
+
+    /* ADMIN FUNCTIONS */
+    updateUserProfileAdmin(updatedContent) {
+        console.log(updatedContent)
+
+        return axiosService.put(API_URL + updatedContent.userId + "/updateProfile", updatedContent, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+            })
+            .then(response => {
+                console.log(response);
+                return response
+            })
+            .catch()
+    } //End of updateUserProfileAdmin
+
+    deleteUserProfileAdmin(userId) {
+        console.log(userId)
+
+        return axiosService.delete(API_URL + userId + '/deleteProfile')
+            .then(response => {
+                console.log(response)
+                return response
+            })
+            .catch()
+    } //End of deleteUserProfileAdmin
 }
 
 //Exports the class

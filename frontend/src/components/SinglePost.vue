@@ -4,8 +4,9 @@
         <div class="postDisplaySection__post__creator">
 
             <div class="postDisplaySection__post__creator-box">
-                <img v-bind:src="post.User.profilePic" alt="Image de profil de l'utilisateur"
-                    class="postDisplaySection__post__creator-box-profilePic">
+                <ProfileOptionsMenu :user="post.User" class="postDisplaySection__post__creator-box-profilePic" />
+                <!-- <img v-bind:src="post.User.profilePic" alt="Image de profil de l'utilisateur"
+                    class="postDisplaySection__post__creator-box-profilePic"> -->
 
                 <div class="postDisplaySection__post__creator-box-text">
                     <span class="postDisplaySection__post__creator-box-text-username">
@@ -91,6 +92,7 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import * as locale from 'dayjs/locale/fr'
+import ProfileOptionsMenu from './optionsMenu/ProfileOptionsMenu.vue'
 dayjs.extend(relativeTime).locale(locale)
 
 export default {
@@ -104,6 +106,7 @@ export default {
         ErrorMessage,
         SingleComment,
         PostOptionsMenu,
+        ProfileOptionsMenu
     },
 
     data() {

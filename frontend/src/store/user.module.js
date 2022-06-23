@@ -53,7 +53,30 @@ export const user = {
                     error => {
                         return Promise.reject(error)
                     })
-        },
+        }, //End of deleteUserProfile
+
+        /* ADMIN FUNCTIONS */
+
+        //Function calling the updateUserProfileAdmin from UserService
+        updateUserProfileAdmin({
+            dispatch
+        }, updatedContent) {
+            return UserService.updateUserProfileAdmin(updatedContent)
+                .then(() => {
+                    dispatch('getUserProfile')
+                })
+        }, //End of updateUserProfileAdmin
+
+        //Function calling the deleteUserProfileAdmin from UserService
+        deleteUserProfileAdmin({}, userId) {
+            return UserService.deleteUserProfileAdmin(userId)
+                .then(response => {
+                        return Promise.resolve(response);
+                    },
+                    error => {
+                        return Promise.reject(error)
+                    })
+        }, //End of deleteUserProfile
     },
 
 

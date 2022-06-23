@@ -113,11 +113,11 @@ module.exports = {
                     include: [{
                         model: models.User,
                         as: 'user',
-                        attributes: ['username', 'profilePic', 'bio']
+                        attributes: ['username', 'profilePic', 'bio', 'id']
                     }],
                 }, {
                     model: models.User,
-                    attributes: ['username', 'profilePic', 'bio'],
+                    attributes: ['username', 'profilePic', 'bio', 'id'],
                 }],
             }
 

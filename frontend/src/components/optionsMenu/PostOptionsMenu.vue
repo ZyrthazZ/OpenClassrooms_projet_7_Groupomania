@@ -23,7 +23,6 @@
         </template>
     </el-dropdown>
 
-    <!-- <button>Modifier le post</button><button>Supprimer le post</button> -->
 </template>
 
 <script>
