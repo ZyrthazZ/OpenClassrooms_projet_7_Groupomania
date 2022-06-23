@@ -24,10 +24,14 @@
             <Form @submit="handleCreatePost" action="" method="post" class="create__post__interface__form">
 
                 <div class="create__post__interface__form-title">
+                    <label for="title">Titre du post</label>
+
                     <Field type="text" placeholder="Titre de votre post" name="title" id="title" />
                 </div>
 
                 <div class="create__post__interface__form-text">
+                    <label for="content">Contenu du post</label>
+
                     <Field type="text" placeholder="Qu'avez-vous en tête ?" name="content" id="content" />
                 </div>
 
@@ -159,6 +163,7 @@ export default {
             height: 40px;
             object-fit: cover;
             border-radius: 15px;
+            margin-top: 22px;
             margin-right: 10px;
         }
 
@@ -175,6 +180,19 @@ export default {
                 @include desktop {
                     max-width: 1000px;
                 }
+            }
+
+            &-title {
+                display: flex;
+                flex-direction: column;
+
+            }
+
+            &-text {
+                display: flex;
+                flex-direction: column;
+
+                margin: 30px 0 30px 0;
             }
 
             &-buttons {

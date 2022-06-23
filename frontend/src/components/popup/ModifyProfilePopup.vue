@@ -10,13 +10,15 @@
 
                 <p class="profile__form-title">Informations du profil</p>
 
-                <p>Pseudo</p>
                 <div class="profile__form-username">
+                    <label for="username">Pseudo de l'utilisateur</label>
+
                     <Field type="text" name="username" id="username" :value="user.username" />
                 </div>
 
-                <p>Bio</p>
                 <div class="profile__form-bio">
+                    <label for="bio">Bio de l'utilisateur</label>
+
                     <Field type="text" name="bio" id="bio" :value="user.bio" />
                 </div>
 

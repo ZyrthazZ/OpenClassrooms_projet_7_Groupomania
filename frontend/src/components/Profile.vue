@@ -25,13 +25,16 @@
             <p class="profile__form-title">Informations du profil</p>
             <p>Adresse email : {{ user.userData.email }}</p>
 
-            <p>Pseudo</p>
+            <!-- <p>Pseudo</p> -->
             <div class="profile__form-username">
+                <label for="username">Pseudo de l'utilisateur</label>
+
                 <Field type="text" name="username" id="username" :value="user.userData.username" />
             </div>
 
-            <p>Bio</p>
             <div class="profile__form-bio">
+                <label for="bio">Bio de l'utilisateur</label>
+
                 <Field type="text" name="bio" id="bio" :value="user.userData.bio" />
             </div>
 
@@ -193,6 +196,20 @@ export default {
 
         &-title {
             margin-bottom: 40px;
+        }
+
+        &-username {
+            display: flex;
+            flex-direction: column;
+            
+            margin: 30px 0 30px 0;
+        }
+        
+        &-bio {
+            display: flex;
+            flex-direction: column;
+            
+            margin: 30px 0 30px 0;
         }
 
         input {
